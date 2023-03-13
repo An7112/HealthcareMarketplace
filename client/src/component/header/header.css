@@ -1,0 +1,74 @@
+.header {
+    border-bottom: 1px solid rgba(149, 150, 151, 0.1);
+    padding: 1rem;
+}
+
+.frame-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.frame-input{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 6px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.input-header{
+    padding: 6px;
+    border: none;
+    background-color: #f5f5f5;
+}
+
+.input-header:focus{
+    outline: none;
+}
+
+.icon-search-header{
+    font-size: 18px;
+    margin-left: 0.5rem;
+}
+
+.frame-info{
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.frame-info .class-avatar{
+    width: 40px;
+    height: 40px;
+    position: relative;
+}
+
+.class-avatar:hover{
+    cursor: pointer;
+}
+
+.class-avatar .span-frame{
+    border-radius: 9999px;
+}
+
+.frame-info .class-icon-bell{
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    border: 1px solid rgba(115, 115, 116, 0.247);
+    justify-content: center;
+}
+
+.class-icon-bell:hover{
+    cursor: pointer;
+}
+
+.class-icon-bell .icon-bell{
+    font-size: 18px;
+}

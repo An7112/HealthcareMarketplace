@@ -1,0 +1,30 @@
+.document-all{
+    width: 100%;
+}
+
+.frame-item-list{
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+ /* margin: 0 auto; */
+}
+
+.frame-item-list .item{
+    border-radius: 8px;
+    border: 1px solid black;
+    overflow: hidden;
+    width: calc(100% / 4 - var(--spacing-xs));
+    height: 300px;
+}
+
+@media (max-width: 767px) {
+    .frame-item-list .item {
+      width: calc(100% / 2 - var(--spacing-xs));
+    }
+  }
+  
+  @media (min-width: 768px) and (max-width: 959px) {
+    .frame-item-list .item {
+      width: calc(100% / 3 - var(--spacing-xs));
+    }
+  }

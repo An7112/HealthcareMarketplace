@@ -5,7 +5,6 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract HealthcareMarket is ReentrancyGuard {
-
     using SafeMath for uint256;
 
     struct Product {
@@ -13,6 +12,7 @@ contract HealthcareMarket is ReentrancyGuard {
         string name;
         string description;
         uint256 price;
+        string imageURL;
         uint256 quantity;
         bool available;
     }
@@ -54,6 +54,7 @@ contract HealthcareMarket is ReentrancyGuard {
         string name,
         string description,
         uint256 price,
+        string imageURL,
         uint256 quantity
     );
     event ProductEdited(
@@ -61,6 +62,7 @@ contract HealthcareMarket is ReentrancyGuard {
         string name,
         string description,
         uint256 price,
+        string imageURL,
         uint256 quantity
     );
     event ProductRemoved(uint256 productId);
@@ -91,6 +93,7 @@ contract HealthcareMarket is ReentrancyGuard {
         string memory name,
         string memory description,
         uint256 price,
+        string memory imageURL,
         uint256 quantity
     ) public onlyOwner returns (uint256) {
         validateProduct(name, description, price, quantity);
@@ -100,10 +103,18 @@ contract HealthcareMarket is ReentrancyGuard {
             name,
             description,
             price,
+            imageURL,
             quantity,
             true
         );
-        emit ProductAdded(lastProductId, name, description, price, quantity);
+        emit ProductAdded(
+            lastProductId,
+            name,
+            description,
+            price,
+            imageURL,
+            quantity
+        );
         return lastProductId;
     }
 
@@ -112,14 +123,16 @@ contract HealthcareMarket is ReentrancyGuard {
         string memory name,
         string memory description,
         uint256 price,
+        string memory imageURL,
         uint256 quantity
     ) public onlyOwner productExists(productId) {
         require(products[productId].available, "Product does not exist.");
         products[productId].name = name;
         products[productId].description = description;
         products[productId].price = price;
+        products[productId].imageURL = imageURL;
         products[productId].quantity = quantity;
-        emit ProductEdited(productId, name, description, price, quantity);
+        emit ProductEdited(productId, name, description, price, imageURL, quantity);
     }
 
     function removeProduct(
@@ -162,7 +175,9 @@ contract HealthcareMarket is ReentrancyGuard {
         require(validProductCount > 0, "No valid products to purchase.");
 
         // Calculate transaction fee
-        uint256 transactionFee = totalPrice.mul(transactionFeePercentage).div(100);
+        uint256 transactionFee = totalPrice.mul(transactionFeePercentage).div(
+            100
+        );
 
         // Transfer funds to owner
         balances[owner] = balances[owner].add(transactionFee);

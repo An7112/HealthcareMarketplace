@@ -1,0 +1,86 @@
+.class-sidebar {
+    width: 320px;
+    height: 100vh;
+    background-color: #fafafa;
+}
+
+.frame-sidebar {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.logo {
+    display: flex;
+    justify-content: flex-center;
+    align-items: center;
+    width: 100%;
+}
+
+.logo span{
+    font-size: 18px;
+    font-weight: 600;
+    color: #221a56;
+}
+
+.di-clojure-alt {
+    color: #221a56;
+    margin: 0rem;
+}
+
+.nav-link{
+    overflow: hidden;
+    color: #acabab;
+}
+
+.nav-link.active{
+    color: #221a56;
+}
+
+.nav-link:hover{
+    background-color: #221a56;
+    color: white;
+}
+
+.nav-link.active:hover{
+    color: white;
+}
+
+.frame-sidebar .class-nav-links {
+    margin-top: 2rem;
+    width: 100%;
+    position: relative;
+    height: auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: hidden;
+}
+
+.class-nav-links .class-nav-link{
+    display: flex;
+    position: absolute;
+    left:  1rem;
+    align-items: center;
+    flex-direction: row;
+    justify-content: flex-start;
+    overflow: hidden;
+    gap: 0.5rem;
+}
+
+.class-nav-links .nav-link {
+    padding: 0.5rem;
+    display: flex;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 12px;
+    height: 60px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'PT Sans', sans-serif;
+}
+
