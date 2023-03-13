@@ -11,14 +11,13 @@ function App() {
     <BrowserRouter>
       <div className="container">
         <Sidebar />
-
         <div className="main">
           <Header />
           <Routes>
             <Route path='/' element={<Navigate to='/overview' />} />
             <Route path='/overview' element={<Home />} />
             <Route path='/product' element={<Product />} />
-            <Route path='/product?products=any' element={<Product />} />
+            <Route path='/product?products=treat-diseases' element={<Product />} />
             {/* <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} /> */}
           </Routes>

@@ -13,8 +13,11 @@
     border-radius: 8px;
     border: 1px solid black;
     overflow: hidden;
-    width: calc(100% / 4 - var(--spacing-xs));
-    height: 300px;
+    width: calc(100% / 6 - var(--spacing-xs));
+    height: 320px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 @media (max-width: 767px) {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { documentModal } from '../../../../modal/modal';
 import { documentLinks } from '../../../../util';
+import { BiSearch } from 'react-icons/bi'
 import './buttonDocument.css'
 
 export const ButtonDocument = () => {
@@ -32,5 +33,11 @@ export const ButtonDocument = () => {
                 <span>{ele.name}</span>
             </div>
         })}
+        <div className='product-search'>
+            <div className='frame-input'>
+                <BiSearch className='icon-search-header' />
+                <input className='input-header' placeholder='Search or type a command' />
+            </div>
+        </div>
     </div>
 }

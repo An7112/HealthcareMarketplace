@@ -9,7 +9,7 @@ export const linkList: Array<sidebarModal> = [
         icon: <HiOutlineViewGrid style={{ fontSize: '18' }} />
     },
     {
-        link: "product?products=any",
+        link: "product?products=treat-diseases",
         name: "product",
         icon: <CgShoppingBag style={{ fontSize: '18' }} />
     },
@@ -17,11 +17,23 @@ export const linkList: Array<sidebarModal> = [
 
 export const documentLinks: Array<any> = [
     {
-        search:'any',
-        name: "Any",
+        search:'treat-diseases',
+        name: "Treat diseases",
     },
     {
-        search:'any2',
-        name: "Any2",
+        search:'preventive-medicine',
+        name: "Preventive medicine",
+    },
+    {
+        search:'adjunctive-therapy',
+        name: "Adjunctive therapy",
+    },
+    {
+        search:'exploration-diagnosis',
+        name: "Exploration and diagnosis",
+    },
+    {
+        search:'supplements',
+        name: "Supplements",
     },
 ]

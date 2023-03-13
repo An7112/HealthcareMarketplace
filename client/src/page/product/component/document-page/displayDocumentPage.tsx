@@ -7,9 +7,9 @@ export const DisplayDocumentPage = () => {
     const [searchParams] = useSearchParams();
     const getParam = searchParams.get('products');
     switch (getParam) {
-        case 'any':
+        case 'treat-diseases':
             return <TreatDiseases />
-        case 'any2':
+        case 'preventive-medicine':
             return <PreventiveMedicine/>
         default:
             return <TreatDiseases />
