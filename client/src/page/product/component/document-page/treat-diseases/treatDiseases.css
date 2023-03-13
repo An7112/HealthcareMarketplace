@@ -14,6 +14,7 @@
   overflow: hidden;
   max-width: 260px;
   max-height: 360px;
+  cursor: pointer;
   overflow: hidden;
   display: flex;
   position: relative;
