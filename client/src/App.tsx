@@ -4,6 +4,7 @@ import Home from './page/home/home';
 import Sidebar from './component/sidebar/sidebar';
 import Header from './component/header/header';
 import Product from './page/product/product';
+import CreateItem from './page/create/create-item';
 import './App.css';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
             <Route path='/' element={<Navigate to='/overview' />} />
             <Route path='/overview' element={<Home />} />
             <Route path='/product' element={<Product />} />
+            <Route path='/create' element={<CreateItem />} />
             <Route path='/product?products=treat-diseases' element={<Product />} />
             {/* <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} /> */}

@@ -9,7 +9,7 @@ export default function Product() {
       <div className='body-header'>
         <div className='header-item-view column'>
           <span className='title-page'>Products</span>
-          <span>Only contract owner can create new item!</span>
+          <span>Only contract owner can create item!</span>
         </div>
         <div className='header-item-view'>
           <BsPlusLg className='icon-body-header' />

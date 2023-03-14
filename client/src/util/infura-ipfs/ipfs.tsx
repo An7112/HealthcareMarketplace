@@ -1,16 +1,15 @@
-import { create } from 'ipfs-http-client'
+import {create} from 'ipfs-http-client';
 import { Buffer } from 'buffer'
 
-const projectId = '09c13a739eb6436c95589c3a11763eca'
-const apiKeySecret = 'bcd4d3a30d274a60a1e544e714e9071d'
+const projectId = '2MxvyhtacHyEkPi21FbYgtHW0Z3'
+const apiKeySecret = '679be2226a6cd04e55726f94eb1d3b70'
 
-const auth = 'Basic' + Buffer.from(projectId + ':' + apiKeySecret).toString('base64')
+const auth = 'Basic ' + Buffer.from(projectId + ':' + apiKeySecret).toString('base64');
 
-export const client = create({
-    host: 'ipfs.infura.io',
-    port: 5001,
-    protocol: 'https',
-    headers: {
-        authorization: auth,
-    }
-})
+export const client = create({ 
+    host: 'ipfs.infura.io', 
+    port: 5001, 
+    protocol: 'https', 
+    headers: { 
+        authorization: auth
+    } });

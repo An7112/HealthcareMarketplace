@@ -84,3 +84,8 @@
     font-family: 'PT Sans', sans-serif;
 }
 
+@media screen and (max-width: 768px) {
+    .class-sidebar {
+        display: none;
+    }
+}
