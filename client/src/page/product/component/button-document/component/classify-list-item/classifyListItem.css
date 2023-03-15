@@ -1,0 +1,110 @@
+.class-classify-main{
+    width: 100%;
+    cursor: pointer;
+    border-bottom: 1px solid rgb(207, 216, 223);
+    box-sizing: border-box;
+}
+
+.class-classify-main:hover{
+    border-radius: 8px;
+    background-color: rgb(234, 244, 252);
+}
+
+.class-classify{
+    margin: var(--spacing-xs) 0;
+    padding: var(--spacing-xs) 0 calc(var(--spacing-xs) + 2px) 0;
+    display: grid;
+    grid-template-columns: repeat(18, minmax(0, 1fr));
+    column-gap: 1rem;
+    width: 100%;
+    align-items: center;
+}
+
+.classify-item {
+    display: grid;
+    grid-column: span 3 / span 3;
+}
+
+.classify-item.single{
+    grid-column: span 1 / span 1;
+}
+
+.classify-item.double{
+    grid-column: span 2 / span 2;
+}
+
+.classify-item.single .span-block-center{
+    cursor: pointer;
+}
+
+.frame-icon-check{
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background-color: rgb(234, 237, 240);
+    color: rgb(207, 212, 216);
+}
+
+.class-classify .rows{
+    grid-column: span 6 / span 6;
+}
+
+.flex-item-row{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    flex-direction: row;
+}
+
+.item-frame-main{
+    width: 50%;
+}
+
+.item-frame {
+    width: 100%;
+    height: 120px;
+    position: relative;
+  }
+  
+  .item-frame .span-item {
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    overflow: hidden;
+    width: inherit;
+    height: inherit;
+    background: none;
+    opacity: 1;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+  
+  .span-item .img-item {
+    border-radius: 8px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    box-sizing: border-box;
+    margin: auto;
+    padding: 0;
+    border: none;
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+  }
+  

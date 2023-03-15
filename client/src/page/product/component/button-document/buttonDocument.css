@@ -1,6 +1,9 @@
+.frame-document-main{
+    width: 100%;
+}
+
 .button-frame-document{
     margin: var(--spacing-xs) 0;
-    padding: 0 var(--spacing-xs);
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
     column-gap: 1rem;
@@ -27,7 +30,11 @@
     color: var(--text-color);
 }
 
-.button-document-page span{
+ .span-block-center{
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     font-size: 16px;   
     font-weight: 600;
 }

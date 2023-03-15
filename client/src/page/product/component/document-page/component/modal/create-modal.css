@@ -1,0 +1,81 @@
+.modal-frame {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    box-sizing: border-box;
+    left: 0px;
+    background-color: rgba(45, 48, 53, 0.76);
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+}
+
+.modal-frame .modal-connect {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateY(0%) translateX(-50%);
+    background: #c5d0d8;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    border-radius: 8px;
+    -webkit-animation: fadeIn 0.5s;
+    animation: fadeIn 0.5s;
+    text-align: center;
+    transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.modal-frame p {
+    color: #121619;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.modal-content {
+    display: flex;
+    max-height: 70vh;
+    max-width: 540px;
+    overflow: auto;
+    -webkit-box-align: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.button-close {
+    position: absolute;
+    top: 8px;
+    z-index: 10;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: #21252b;
+    border: none;
+}
+
+.button-close  svg {
+    color: white;
+}
+
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
