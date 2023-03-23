@@ -66,7 +66,7 @@ export default function CreateItem() {
           imageURL,
           quantity
         ).send({ from: accounts[0] })
-        console.log('thanh cong');
+        console.log(imageURL);
       } catch (error: any) {
         console.log(error);
       }

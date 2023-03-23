@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BsPlusLg } from 'react-icons/bs'
 import { DisplayDocumentPage } from './component'
 import { CreateModal } from './component/document-page/component/modal/create-modal';
@@ -9,6 +9,7 @@ export default function Product() {
   const callbackUpdateModal = (callbackData: boolean) => {
     setModal(callbackData)
   }
+
   return (
     <div className='body'>
       {modal === true && <CreateModal propsCallback={callbackUpdateModal} />}

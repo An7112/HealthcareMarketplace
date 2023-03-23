@@ -1,11 +1,24 @@
+// Để sử dụng 1 token riêng thay cho ether trong smart contract này, bạn cần chỉnh sửa một số phần của contract. Hiện tại, contract này đang sử dụng ether như là đơn vị tiền tệ để thực hiện các giao dịch.
+
+// Đầu tiên, bạn cần tạo một smart contract mới để đại diện cho token của bạn, nơi bạn sẽ định nghĩa các hàm chức năng cần thiết để quản lý token của bạn. Một số chức năng cơ bản bao gồm tạo mới token, phân phối token, chuyển đổi token và kiểm tra số dư tài khoản.
+
+// Sau khi bạn đã có smart contract của mình để đại diện cho token, bạn có thể chỉnh sửa các hàm trong smart contract HealthcareMarket để sử dụng token của bạn thay vì ether. Cụ thể, bạn cần thay đổi phần trong hàm buy() để trừ số lượng token tương ứng thay vì số lượng ether từ tài khoản của người mua và chuyển số lượng token tương ứng đến tài khoản của chủ sở hữu smart contract.
+
+// Bạn cũng cần đảm bảo rằng tài khoản của mỗi người dùng có đủ token để thực hiện các giao dịch. Bạn có thể thực hiện điều này bằng cách sử dụng hàm transfer() của smart contract của bạn để chuyển token từ tài khoản của người dùng đến tài khoản của HealthcareMarket smart contract trước khi thực hiện một giao dịch.
+
+// Sau khi bạn đã hoàn thành các bước trên, bạn có thể sử dụng token của mình để thực hiện các giao dịch trong smart contract HealthcareMarket.
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "./HealthcareToken.sol";
 
 contract HealthcareMarket is ReentrancyGuard {
     using SafeMath for uint256;
+
+    HealthcareToken public token;
 
     struct Product {
         uint256 id;
@@ -69,11 +82,11 @@ contract HealthcareMarket is ReentrancyGuard {
     event PurchaseMade(uint256 purchaseId, address buyer, uint256 totalPrice);
     event PurchaseDelivered(uint256 purchaseId);
 
-    constructor() {
+    constructor(address tokenAddress) {
         owner = msg.sender;
+        token = HealthcareToken(tokenAddress);
     }
 
-    //Kiểm tra tính hợp lệ của các tham số truyền vào trước khi được addProduct
     function validateProduct(
         string memory name,
         string memory description,
@@ -132,7 +145,14 @@ contract HealthcareMarket is ReentrancyGuard {
         products[productId].price = price;
         products[productId].imageURL = imageURL;
         products[productId].quantity = quantity;
-        emit ProductEdited(productId, name, description, price, imageURL, quantity);
+        emit ProductEdited(
+            productId,
+            name,
+            description,
+            price,
+            imageURL,
+            quantity
+        );
     }
 
     function removeProduct(
@@ -148,7 +168,7 @@ contract HealthcareMarket is ReentrancyGuard {
         }
     }
 
-    function buy(uint256[] memory productIds) public payable {
+    function buy(uint256[] memory productIds) public {
         require(
             kyc[msg.sender] || productIds.length < 100,
             "KYC required for large purchases."
@@ -173,19 +193,28 @@ contract HealthcareMarket is ReentrancyGuard {
             }
         }
         require(validProductCount > 0, "No valid products to purchase.");
-
         // Calculate transaction fee
         uint256 transactionFee = totalPrice.mul(transactionFeePercentage).div(
             100
         );
 
-        // Transfer funds to owner
-        balances[owner] = balances[owner].add(transactionFee);
-        balances[msg.sender] = balances[msg.sender].add(
-            totalPrice.sub(transactionFee)
+        // Transfer tokens to owner
+        require(
+            token.transferFrom(msg.sender, owner, transactionFee),
+            "Token transfer failed"
         );
 
-        // Create purchase record
+        // Transfer products to buyer
+        require(
+            token.transferFrom(
+                owner,
+                msg.sender,
+                totalPrice.sub(transactionFee)
+            ),
+            "Token transfer failed"
+        );
+
+        // Create purchase
         lastPurchaseId++;
         purchases[lastPurchaseId] = Purchase(
             lastPurchaseId,
@@ -194,6 +223,13 @@ contract HealthcareMarket is ReentrancyGuard {
             false
         );
         emit PurchaseMade(lastPurchaseId, msg.sender, totalPrice);
+    }
+
+    function withdrawBalance() public nonReentrant {
+        uint256 balance = balances[msg.sender];
+        require(balance > 0, "No balance to withdraw.");
+        require(token.transfer(msg.sender, balance), "Token transfer failed");
+        balances[msg.sender] = 0;
     }
 
     function deliver(uint256 purchaseId) public onlyOwner {

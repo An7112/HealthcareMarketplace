@@ -4,7 +4,7 @@
 
 .class-classify{
     margin: var(--spacing-xs) 0;
-    padding: var(--spacing-xs) 0 calc(var(--spacing-xs) + 2px) 0;
+    /* padding: var(--spacing-xs) 0 calc(var(--spacing-xs) + 2px) 0; */
     display: grid;
     grid-template-columns: repeat(18, minmax(0, 1fr));
     column-gap: 1rem;

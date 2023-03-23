@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import HealthcareMarket from '../../../../../../contracts/HealthcareMarket.json'
 import Web3Modal from 'web3modal'
 import Web3 from 'web3'
-import { BsFillCartCheckFill } from 'react-icons/bs'
 import './classifyListItem.css'
+import PaginatedList from '../../../../../../util/paginated/paginationList'
 
 export const ClassifyListItem = () => {
 
@@ -55,54 +55,6 @@ export const ClassifyListItem = () => {
     }, [contract])
 
     return (
-        <>
-            {products.map((item: any) => (
-                <div className='class-classify-main'>
-                    <div className='class-classify'>
-                        <div className='classify-item single'>
-                            <span className='span-block-center'>
-                                <div className='frame-icon-check'>
-                                    <BsFillCartCheckFill />
-                                </div>
-                            </span>
-                        </div>
-                        <div className='classify-item rows'>
-                            <div className='flex-item-row'>
-                                <div className='item-frame-main'>
-                                    <div className='item-frame'>
-                                        <span className='span-item'>
-                                            <img className='img-item' alt='' src={item.imageURL} />
-                                        </span>
-                                    </div>
-                                </div>
-                                <span className='span-block-center'>
-                                    {item.name}
-                                </span>
-                            </div>
-                        </div>
-                        <div className='classify-item'>
-                            <span className='span-block-center'>
-                                Treat diseases
-                            </span>
-                        </div>
-                        <div className='classify-item'>
-                            <span className='span-block-center'>
-                                {item.price}
-                            </span>
-                        </div>
-                        <div className='classify-item'>
-                            <span className='span-block-center'>
-                                {item.quantity}
-                            </span>
-                        </div>
-                        <div className='classify-item double'>
-                            <span className='span-block-center'>
-                                15/03/2023
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            ))}
-        </>
+        <PaginatedList items={products} itemsPerPage={5}/>
     )
 }
