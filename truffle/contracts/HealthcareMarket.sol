@@ -1,12 +1,4 @@
-// Để sử dụng 1 token riêng thay cho ether trong smart contract này, bạn cần chỉnh sửa một số phần của contract. Hiện tại, contract này đang sử dụng ether như là đơn vị tiền tệ để thực hiện các giao dịch.
 
-// Đầu tiên, bạn cần tạo một smart contract mới để đại diện cho token của bạn, nơi bạn sẽ định nghĩa các hàm chức năng cần thiết để quản lý token của bạn. Một số chức năng cơ bản bao gồm tạo mới token, phân phối token, chuyển đổi token và kiểm tra số dư tài khoản.
-
-// Sau khi bạn đã có smart contract của mình để đại diện cho token, bạn có thể chỉnh sửa các hàm trong smart contract HealthcareMarket để sử dụng token của bạn thay vì ether. Cụ thể, bạn cần thay đổi phần trong hàm buy() để trừ số lượng token tương ứng thay vì số lượng ether từ tài khoản của người mua và chuyển số lượng token tương ứng đến tài khoản của chủ sở hữu smart contract.
-
-// Bạn cũng cần đảm bảo rằng tài khoản của mỗi người dùng có đủ token để thực hiện các giao dịch. Bạn có thể thực hiện điều này bằng cách sử dụng hàm transfer() của smart contract của bạn để chuyển token từ tài khoản của người dùng đến tài khoản của HealthcareMarket smart contract trước khi thực hiện một giao dịch.
-
-// Sau khi bạn đã hoàn thành các bước trên, bạn có thể sử dụng token của mình để thực hiện các giao dịch trong smart contract HealthcareMarket.
 
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
