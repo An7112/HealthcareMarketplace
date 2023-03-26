@@ -16,7 +16,7 @@
     top: 10%;
     left: 50%;
     transform: translateY(0%) translateX(-50%);
-    background: #c5d0d8;
+    background-color: white;
     padding: 0;
     box-sizing: border-box;
     overflow: hidden;

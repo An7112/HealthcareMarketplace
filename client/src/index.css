@@ -54,7 +54,7 @@ span {
 }
 
 :root {
-  --main-major: #221a56;
+  --main-major: #55B9A9;
   --text-color: white;
   --spacing-xs: 0.5rem;
   --spacing-sm: 1rem;
@@ -63,3 +63,14 @@ span {
   --fs-2xl: 20px;
   --fs-4xl: 24px;
 }
+
+
+/* Màu xanh lá cây: #55B9A9 hoặc #28B463
+Màu xanh dương: #0072C6 hoặc #5DA5DA
+Màu xám: #808080 hoặc #BFBFBF
+Màu trắng: #FFFFFF
+Màu vàng nhạt: #F8E71C hoặc #F5A623 
+#008000
+#FFC0CB
+#6B3FA0
+*/

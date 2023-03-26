@@ -6,6 +6,7 @@ import Header from './component/header/header';
 import Product from './page/product/product';
 import CreateItem from './page/create/create-item';
 import './App.css';
+import DetailItem from './page/detail-item/detailItem';
 
 function App() {
   return (
@@ -20,8 +21,7 @@ function App() {
             <Route path='/product' element={<Product />} />
             <Route path='/create' element={<CreateItem />} />
             <Route path='/product?products=treat-diseases' element={<Product />} />
-            {/* <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} /> */}
+            <Route path='/product/item/:_id' element={<DetailItem />} />
           </Routes>
           <div className='footer'></div>
           {/* <Footer /> */}

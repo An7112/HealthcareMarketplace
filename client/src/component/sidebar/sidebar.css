@@ -20,25 +20,26 @@
 .logo span{
     font-size: 18px;
     font-weight: 600;
-    color: #221a56;
+    color: #55B9A9;
 }
 
 .di-clojure-alt {
-    color: #221a56;
+    color: #55B9A9;
     margin: 0rem;
 }
 
 .nav-link{
     overflow: hidden;
+    transition: ease-in-out 0.2s;
     color: #acabab;
 }
 
 .nav-link.active{
-    color: #221a56;
+    color: #55B9A9;
 }
 
 .nav-link:hover{
-    background-color: #221a56;
+    background-color: #55B9A9;
     color: white;
 }
 

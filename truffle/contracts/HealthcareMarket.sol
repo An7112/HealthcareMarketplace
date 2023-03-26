@@ -1,13 +1,3 @@
-// Để sử dụng 1 token riêng thay cho ether trong smart contract này, bạn cần chỉnh sửa một số phần của contract. Hiện tại, contract này đang sử dụng ether như là đơn vị tiền tệ để thực hiện các giao dịch.
-
-// Đầu tiên, bạn cần tạo một smart contract mới để đại diện cho token của bạn, nơi bạn sẽ định nghĩa các hàm chức năng cần thiết để quản lý token của bạn. Một số chức năng cơ bản bao gồm tạo mới token, phân phối token, chuyển đổi token và kiểm tra số dư tài khoản.
-
-// Sau khi bạn đã có smart contract của mình để đại diện cho token, bạn có thể chỉnh sửa các hàm trong smart contract HealthcareMarket để sử dụng token của bạn thay vì ether. Cụ thể, bạn cần thay đổi phần trong hàm buy() để trừ số lượng token tương ứng thay vì số lượng ether từ tài khoản của người mua và chuyển số lượng token tương ứng đến tài khoản của chủ sở hữu smart contract.
-
-// Bạn cũng cần đảm bảo rằng tài khoản của mỗi người dùng có đủ token để thực hiện các giao dịch. Bạn có thể thực hiện điều này bằng cách sử dụng hàm transfer() của smart contract của bạn để chuyển token từ tài khoản của người dùng đến tài khoản của HealthcareMarket smart contract trước khi thực hiện một giao dịch.
-
-// Sau khi bạn đã hoàn thành các bước trên, bạn có thể sử dụng token của mình để thực hiện các giao dịch trong smart contract HealthcareMarket.
-
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -46,8 +36,6 @@ contract HealthcareMarket is ReentrancyGuard {
     uint256 public lastPurchaseId;
 
     address owner;
-
-    uint256 public transactionFeePercentage = 1; //1%
 
     modifier onlyOwner() {
         require(
@@ -168,61 +156,42 @@ contract HealthcareMarket is ReentrancyGuard {
         }
     }
 
-    function buy(uint256[] memory productIds) public {
-        require(
-            kyc[msg.sender] || productIds.length < 100,
-            "KYC required for large purchases."
-        );
-        require(
-            productIds.length <= 100,
-            "Maximum 100 products can be purchased at a time."
-        );
-        // Remove products that are not available or out of stock
-        uint256[] memory validProductIds = new uint256[](productIds.length);
-        uint256 validProductCount = 0;
-        uint256 totalPrice = 0;
-        for (uint256 i = 0; i < productIds.length; i++) {
-            if (
-                products[productIds[i]].available &&
-                products[productIds[i]].quantity > 0
-            ) {
-                validProductIds[validProductCount] = productIds[i];
-                validProductCount++;
-                totalPrice = totalPrice.add(products[productIds[i]].price);
-                products[productIds[i]].quantity--;
+    function buy(
+        uint256 productId
+    ) public nonReentrant productExists(productId) {
+        Product storage product = products[productId];
+        require(product.quantity > 0, "Product is out of stock.");
+
+        uint256 price = product.price;
+
+        // Approve token transfer from buyer to HealthcareMarket
+        token.approve(address(this), price);
+        // Transfer tokens from buyer to HealthcareMarket
+        token.transferFrom(msg.sender, address(this), price);
+        // Transfer tokens from HealthcareMarket to owner
+        token.transfer(owner, price);
+
+        product.quantity = product.quantity.sub(1);
+
+        bool purchaseExist = false;
+        for (uint256 i = 0; i < lastPurchaseId; i++) {
+            Purchase storage purchase = purchases[i];
+            if (purchase.buyer == msg.sender && purchase.delivered == false) {
+                purchase.products.push(productId);
+                purchaseExist = true;
+                break;
             }
         }
-        require(validProductCount > 0, "No valid products to purchase.");
-        // Calculate transaction fee
-        uint256 transactionFee = totalPrice.mul(transactionFeePercentage).div(
-            100
-        );
 
-        // Transfer tokens to owner
-        require(
-            token.transferFrom(msg.sender, owner, transactionFee),
-            "Token transfer failed"
-        );
+        if (!purchaseExist) {
+            Purchase storage newPurchase = purchases[lastPurchaseId];
+            newPurchase.id = lastPurchaseId;
+            newPurchase.buyer = msg.sender;
+            newPurchase.products.push(productId);
+            lastPurchaseId++;
+        }
 
-        // Transfer products to buyer
-        require(
-            token.transferFrom(
-                owner,
-                msg.sender,
-                totalPrice.sub(transactionFee)
-            ),
-            "Token transfer failed"
-        );
-
-        // Create purchase
-        lastPurchaseId++;
-        purchases[lastPurchaseId] = Purchase(
-            lastPurchaseId,
-            msg.sender,
-            validProductIds,
-            false
-        );
-        emit PurchaseMade(lastPurchaseId, msg.sender, totalPrice);
+        emit PurchaseMade(lastPurchaseId, msg.sender, price);
     }
 
     function withdrawBalance() public nonReentrant {
