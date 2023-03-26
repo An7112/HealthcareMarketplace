@@ -6,7 +6,7 @@ import { BiSearch } from 'react-icons/bi'
 import './buttonDocument.css'
 import { Classify, ClassifyListItem } from './component';
 
-export const ProductPage = () => {
+export const Product = () => {
     const Navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const [active, setActive] = useState('');
