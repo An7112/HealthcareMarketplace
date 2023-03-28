@@ -55,6 +55,6 @@ export const ClassifyListItem = () => {
     }, [contract])
 
     return (
-        <PaginatedList items={products} itemsPerPage={5}/>
+        <PaginatedList items={products} itemsPerPage={8}/>
     )
 }

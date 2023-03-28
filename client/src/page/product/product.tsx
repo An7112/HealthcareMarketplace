@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { BsPlusLg } from 'react-icons/bs'
 import { DisplayDocumentPage } from './component'
-import { CreateModal } from './component/document-page/component/modal/create-modal';
+import { CreateModal } from './component/classification/component/modal/create-modal';
 import './product.css'
 
 export default function Product() {
@@ -16,7 +16,7 @@ export default function Product() {
       <div className='body-header'>
         <div className='header-item-view column'>
           <span className='title-page'>Products</span>
-          <span>Only contract owner can create item!</span>
+          <span>Only the owner can create items!</span>
         </div>
         <div className='header-item-view' onClick={() => setModal(true)}>
           <BsPlusLg className='icon-body-header' />

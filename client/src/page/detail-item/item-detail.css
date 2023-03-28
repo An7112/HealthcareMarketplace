@@ -1,0 +1,664 @@
+.class-collection-detail {
+    width: 100%;
+    min-height: 100vh;
+}
+
+.class-collection-detail .content-page {
+    gap: 16px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 100%;
+    max-width: 1200px;
+    height: 100%;
+}
+
+.content-page .collection-detail-left {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.content-page .collection-detail-right {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.collection-detail-left img {
+    margin-top: 10px;
+    border-radius: 4px;
+    object-fit: cover;
+    max-width: 90%;
+    height: 334px;
+}
+
+.class-showdown {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #bff0e8;
+    border-radius: 8px;
+    box-sizing: border-box;
+    min-height: fit-content;
+    overflow: hidden;
+}
+
+.class-down-detail {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 0;
+    background: border-box;
+    background-color: #ffffff;
+    min-height: fit-content;
+    border-top: 1px solid #bff0e8;
+}
+
+.class-down-grid {
+    width: 90%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.class-down-grid .down-detail-item {
+    border-radius: 4px;
+    height: 80px;
+    padding: 4px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    flex-direction: column;
+    overflow: hidden;
+    color: black;
+    transition: ease-in-out 0.2s;
+    background-color: white;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.39);
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.down-detail-item .title-item {
+    color: #f5a623;
+    font-weight: 600;
+}
+
+.down-detail-item:hover {
+    background-color: #55b9a9;
+    color: white;
+}
+
+.down-detail-item:hover .title-item {
+    color: black;
+}
+
+.detail-item-bottom {
+    display: flex;
+    width: 100%;
+    gap: 6px;
+    flex-direction: row;
+    align-items: flex-start;
+    font-size: 14px;
+}
+
+.detail-item-bottom > p {
+    padding: 0;
+    margin: 4px 0 0 0;
+}
+
+.detail-item-bottom-percent {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.detail-item-bottom-percent p {
+    margin: 4px 0 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.detail-item-bottom-price {
+    display: flex;
+    text-align: right;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    overflow: hidden;
+}
+
+.detail-item-bottom-price p {
+    padding-left: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 4px 0 0 0;
+}
+
+.class-properties {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+}
+
+.class-properties .class-name-properties {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    width: 80%;
+}
+
+.class-properties .properties {
+    padding-left: 6px;
+    font-size: 16px;
+    color: black;
+    font-weight: 600;
+}
+
+.class-properties.icon {
+    font-size: 20px;
+    color: black;
+}
+
+.class-properties.offer {
+    height: 60px;
+}
+
+.showdown {
+    width: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.showdown-icon {
+    cursor: pointer;
+    padding-right: 6px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.showdown-icon polyline {
+    stroke: black;
+}
+/*  */
+
+.chakra-stack {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.chakra-stack .svg-down-edit {
+    display: none;
+    position: absolute;
+    color: black;
+    right: 0.8rem;
+    top: 2.3rem;
+    font-size: 16px;
+}
+
+.chakra-stack .box-edit {
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    flex-direction: column;
+    border-radius: 4px;
+    right: 0;
+    top: 30px;
+    gap: 4px;
+    background-color: #21252b;
+    transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.box-edit button {
+    width: 100px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+    height: 40px;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    background-color: #2a2f36;
+    border: none;
+    border-radius: 4px;
+    color: black;
+    padding: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: all ease-out 0.3s;
+}
+
+.box-edit button:hover {
+    transform: scale(1.05);
+}
+
+.box-edit button svg {
+    padding-left: 4px;
+    font-size: 16px;
+}
+
+.chakra-stack-header {
+    display: grid;
+    grid-column-gap: 4px;
+    grid-template-columns: minmax(0, auto) auto;
+    width: 100%;
+}
+
+.chakra-stack-header-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.header-left-span {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.header-left-span p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-left-span .check {
+    color: #2081e2;
+}
+
+.floor-type {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.floor-type p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: black;
+}
+
+.chakra-stack-header-right {
+    cursor: pointer;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: row;
+}
+
+.chakra-stack-header-right span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border: 1px solid #55b9a9;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #55b9a9;
+}
+
+.chakra-stack-header-right:hover {
+    background-color: #55b9a9;
+    color: white;
+}
+
+.class-info-chakra-stack {
+    margin-top: 8px;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.class-info-chakra-stack h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 15px;
+    line-height: 24px;
+    color: black;
+    letter-spacing: -0.01em;
+    font-weight: 700;
+    word-break: break-word;
+    text-overflow: ellipsis;
+    overflow: initial;
+    display: -webkit-box;
+}
+
+.class-info-chakra-stack .class-info-owner {
+    display: flex;
+    float: left;
+    align-items: center;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 8px;
+    width: 100%;
+}
+
+.class-info-owner img {
+    width: 40px;
+    height: 40px;
+    background-color: black;
+    border-radius: 50%;
+    overflow: hidden;
+    object-fit: contain;
+}
+
+.class-info-owner .owner-name {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    color: rgb(105, 104, 104);
+    overflow: hidden;
+}
+
+.class-info-owner .owner-name span {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.class-info-owner .owner-name span p {
+    font-size: 16px;
+    margin: 0;
+    font-weight: 700;
+    color: black;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 300px;
+    width: 100%;
+}
+
+.class-info-chakra-stack .class-offer {
+    display: grid;
+    padding: 4px 0;
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid #bff0e8;
+    box-sizing: border-box;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.class-offer-content {
+    height: 100%;
+    grid-column: span 1 / span 1;
+}
+
+.class-offer-content .offer-info {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    gap: 4px;
+    width: 100%;
+    height: 100%;
+    color: black;
+    font-weight: 700;
+}
+
+.class-offer-content .offer-info span {
+    padding-left: 6px;
+    font-size: 16px;
+    color: rgb(78, 78, 78);
+}
+
+.class-offer-content .offer-info .input-resell-outer {
+    width: fit-content;
+    overflow: hidden;
+}
+
+.input-resell-outer input {
+    max-width: 24px;
+    border-radius: 4px;
+    color: black;
+    background-color: #2a2f36;
+    padding: 2px;
+    border: none;
+}
+
+.input-resell-outer input:focus {
+    outline: none;
+}
+
+.class-offer-content .offer-info .svg-resell {
+    animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    color: #378161;
+    font-size: 20px;
+}
+
+.class-offer-content button {
+    margin-right: 6px;
+    width: 100%;
+    max-height: 96%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    background-color: white;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    border: 1px solid #bff0e8;
+    font-weight: 700;
+    transition: all ease-in-out 0.3s;
+}
+
+.class-offer-content button:hover {
+    transform: scale(1.02);
+    background-color: #378161;
+    color: white;
+}
+
+/*  */
+
+.class-down-offer {
+    overflow: hidden;
+    display: block;
+    height: auto;
+    border-top: 1px solid #bff0e8;
+}
+
+.chakra-accordion-panel {
+    background: border-box;
+    max-height: 24rem;
+    overflow-y: auto;
+}
+
+.chakra-accordion-panel .chakra-stack {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 8px 0;
+    background-color: #ffffff;
+}
+
+.chakra-accordion-panel::-webkit-scrollbar {
+    display: block;
+    width: 10px;
+}
+
+.chakra-accordion-panel::-webkit-scrollbar-thumb {
+    background: #4c505c;
+}
+
+.chakra-stack-list {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.chakra-stack-list .chakra-stack-grid {
+    display: grid;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    width: 96%;
+    grid-column-gap: 8px;
+}
+
+.chakra-stack-grid .chakra-wrap {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 100%;
+    gap: 4px;
+    justify-content: flex-start;
+}
+
+.chakra-wrap p {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #4f5152;
+}
+
+.chakra-stack-list .chakra-stack-grid-activity {
+    width: 96%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.chakra-stack-grid-activity.chakra-wrap-left {
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    grid-row-gap: 4px;
+}
+
+.chakra-stack-list .chakra-stack-grid-activity .chakra-wrap-right {
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    height: 40px;
+    width: 43px;
+    border: 1px solid #55b9a9;
+    border-radius: 8px;
+    background: border-box;
+    font-size: 16px;
+    cursor: pointer;
+    color: #55b9a9;
+}
+
+.chakra-wrap-right:hover {
+    background-color: #55b9a9;
+    color: white;
+}
+
+.chakra-wrap-left-content {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 100%;
+    gap: 4px;
+    justify-content: flex-start;
+}
+
+.chakra-wrap-left-content .wrap-left-content-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    border: 1px solid #2081e2;
+    border-radius: 10px;
+    background: border-box;
+    cursor: text;
+    color: #2081e2;
+    height: fit-content;
+}
+
+.chakra-wrap-left-content .wrap-left-content-button.sale {
+    border: 1px solid #a570ff;
+    color: #a570ff;
+}
+
+.chakra-wrap-left-content .wrap-left-content-button p {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.chakra-wrap-left-content span {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    justify-content: center;
+    font-size: 14px;
+    color: #808385;
+    font-weight: 400;
+}
+
+.chakra-wrap-left-content.info p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #4f5152;
+}
+
+.chakra-wrap span {
+    /* margin: 0; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #808385;
+    font-weight: 400;
+}
+
+hr {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-inline: 0px;
+    border-left-width: 0px;
+    border-bottom-width: 1px;
+}
+
+@media (max-width: 768px) {
+    .class-collection-detail .content-page {
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+
+    .class-collection-detail .content-page .collection-detail-left {
+        width: 100%;
+    }
+
+    .class-collection-detail .content-page .collection-detail-right {
+        width: 100%;
+    }
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}

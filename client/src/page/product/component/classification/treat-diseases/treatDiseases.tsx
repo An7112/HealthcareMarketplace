@@ -1,12 +1,12 @@
 import React from 'react'
-import { ProductPage } from '../../button-document/productPage'
+import { Product } from '../../preview-product/product'
 import './treatDiseases.css'
 
 export const TreatDiseases = () => {
 
     return (
         <div className='document-all'>
-            <ProductPage/>
+            <Product/>
         </div>
     )
 }

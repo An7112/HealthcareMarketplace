@@ -5,7 +5,7 @@ import './classify.css'
 export const Classify = () => {
     return (
         <div className='class-classify-main'>
-            <div className='class-classify'>
+            <div className='class-classify title'>
                 <div className='classify-item single'>
                     <span className='span-block-center'>
                         <div className='frame-icon-check'>
