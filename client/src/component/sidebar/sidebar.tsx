@@ -7,11 +7,14 @@ import { CgShoppingBag } from 'react-icons/cg'
 import Web3Modal from 'web3modal'
 import Web3 from 'web3';
 import HealthcareMarket from '../../contracts/HealthcareMarket.json'
+import { useDispatch } from "react-redux";
 import './sidebar.css'
+import { setCheckOwner } from '../../store/reducers';
 
 export default function Sidebar() {
 
   const [newLinks, setNewLinks] = useState<Array<any>>([])
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function init() {
@@ -35,12 +38,14 @@ export default function Sidebar() {
           name: "create",
           icon: <CgShoppingBag style={{ fontSize: '18' }} />
         },])
+        dispatch(setCheckOwner(true));
       } else {
         setNewLinks(linkList)
+        dispatch(setCheckOwner(false))
       }
     }
     init()
-  }, [])
+  }, [dispatch])
 
   return (
     <div className='class-sidebar'>

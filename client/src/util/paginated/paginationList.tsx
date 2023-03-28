@@ -22,7 +22,7 @@ const PaginatedList: React.FC<Props> = ({ items, itemsPerPage }) => {
   return (
     <div className='class-page-main'>
       {pagedItems.map((item, index) => (
-        <Link to={`/product/item/${item.id}`}>
+        <Link to={`/product/item/${item.id}`} key={item.id}>
         <div className='class-classify-main item'>
           <div className='class-classify'>
             <div className='classify-item single'>

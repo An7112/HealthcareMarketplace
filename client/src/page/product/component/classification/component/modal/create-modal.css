@@ -55,12 +55,13 @@
     height: 30px;
     border-radius: 50%;
     cursor: pointer;
-    background-color: #21252b;
+    background-color: white;
     border: none;
+    border: 1px solid black;
 }
 
 .button-close  svg {
-    color: white;
+    color: black;
 }
 
 @-webkit-keyframes fadeIn {
