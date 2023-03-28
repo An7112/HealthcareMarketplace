@@ -26,14 +26,16 @@ export const Product = () => {
 
     return <div className='frame-document-main'>
         <div className='button-frame-document'>
-            {/* <input type="checkbox" name="check" value="check" className='checkbox'/> */}
             {documentLinks.map((ele: documentModal) => {
-                return <div
-                    className={`button-document-page ${ele.search === active ? 'active' : ''}`}
-                    onClick={() => handleActive(ele.search)}
-                >
-                    <span className='span-block-center'>{ele.name}</span>
-                </div>
+                return (
+                    <div
+                        key={ele.search}
+                        className={`button-document-page ${ele.search === active ? 'active' : ''}`}
+                        onClick={() => handleActive(ele.search)}
+                    >
+                        <span className='span-block-center'>{ele.name}</span>
+                    </div>
+                )
             })}
             <div className='product-search'>
                 <div className='frame-input'>
@@ -42,7 +44,7 @@ export const Product = () => {
                 </div>
             </div>
         </div>
-        <Classify/>
-        <ClassifyListItem/>
+        <Classify />
+        <ClassifyListItem />
     </div>
 }

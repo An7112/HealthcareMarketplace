@@ -13,11 +13,6 @@ export const linkList: Array<sidebarModal> = [
         name: "product",
         icon: <CgShoppingBag style={{ fontSize: '18' }} />
     },
-    {
-        link: "create",
-        name: "create",
-        icon: <CgShoppingBag style={{ fontSize: '18' }} />
-    },
 ]
 
 export const documentLinks: Array<any> = [

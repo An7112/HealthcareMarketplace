@@ -5,10 +5,11 @@ import Sidebar from './component/sidebar/sidebar';
 import Header from './component/header/header';
 import Product from './page/product/product';
 import CreateItem from './page/create/create-item';
-import './App.css';
 import DetailItem from './page/detail-item/detailItem';
+import './App.css';
 
 function App() {
+
   return (
     <BrowserRouter>
       <div className="container">

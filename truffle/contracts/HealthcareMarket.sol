@@ -36,7 +36,7 @@ contract HealthcareMarket is ReentrancyGuard {
     uint256 public lastProductId;
     uint256 public lastPurchaseId;
 
-    address owner;
+    address private owner;
 
     modifier onlyOwner() {
         require(
@@ -74,6 +74,10 @@ contract HealthcareMarket is ReentrancyGuard {
     constructor(address tokenAddress) {
         owner = msg.sender;
         token = HealthcareToken(tokenAddress);
+    }
+
+    function getOwnerAddress () public view returns (address) {
+        return owner;
     }
 
     function validateProduct(
