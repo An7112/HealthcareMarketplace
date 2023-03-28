@@ -315,7 +315,7 @@
     color: #55b9a9;
 }
 
-.chakra-stack-header-right:hover {
+.chakra-stack-header-right span:hover {
     background-color: #55b9a9;
     color: white;
 }

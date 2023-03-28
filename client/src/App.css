@@ -7,6 +7,7 @@
   flex-direction: column;
   width: calc(100% - 280px);
   min-height: 100vh;
+  position: relative;
 }
 
 /* Cấu hình định dạng cho footer */
