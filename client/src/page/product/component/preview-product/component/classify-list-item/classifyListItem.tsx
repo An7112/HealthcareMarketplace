@@ -28,33 +28,38 @@ export const ClassifyListItem = () => {
 
     useEffect(() => {
         async function fetchProducts() {
-            if (contract !== null) {
-                try {
-                    const productCount = await contract.methods.lastProductId().call();
-                    const products = [];
-                    for (let i = 1; i <= productCount; i++) {
-                        const product = await contract.methods.products(i).call();
-                        if (product.available && product.quantity > 0) {
-                            products.push({
-                                name: product.name,
-                                id: product.id,
-                                description: product.description,
-                                price: product.price,
-                                imageURL: product.imageURL,
-                                quantity: product.quantity,
-                            });
-                        }
-                    }
-                    setProducts(products);
-                } catch (error: any) {
-                    console.log(error);
-                }
+            try {
+                const productCount = await contract.methods.lastProductId().call();
+                const productIds = Array.from(
+                    { length: productCount },
+                    (_, i) => i + 1
+                );
+                console.log(productIds);
+                const products = await Promise.all(
+                    productIds.map(async (id) => {
+                        const product = await contract.methods.products(id).call();
+                        return {
+                            name: product.name,
+                            id: product.id,
+                            description: product.description,
+                            price: product.price,
+                            imageURL: product.imageURL,
+                            quantity: product.quantity,
+                            available: product.available
+                        };
+                    })
+                );
+                setProducts(products.filter((product) => product.available && product.quantity > 0));
+            } catch (error: any) {
+                console.log(error);
             }
         }
-        fetchProducts();
+        if (contract != null) {
+            fetchProducts();
+        }
     }, [contract])
 
     return (
-        <PaginatedList items={products} itemsPerPage={8}/>
+        <PaginatedList items={products} itemsPerPage={8} />
     )
 }

@@ -6,6 +6,7 @@ import { AiOutlineBarChart } from 'react-icons/ai'
 import { TfiReload } from 'react-icons/tfi'
 import { BsChevronRight } from 'react-icons/bs'
 import './home.css'
+import TopNews from './component/News/topNews'
 
 export default function Home() {
 
@@ -17,9 +18,9 @@ export default function Home() {
         <div className='class-home-top'>
           <div className='home-top-item banner'>
             <h3>Hello, An!</h3>
-            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-              Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-              when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+              <span className='span-banner'>
+                <img className='banner' alt='' src='/media/banner.jpg'/>
+              </span>
           </div>
           <div className='home-top-item'>
             <h3>Hello, An!</h3>
@@ -145,9 +146,7 @@ export default function Home() {
         {/* <ExchangeToken /> */}
       </div>
       {/*  */}
-      <div className='top-news'>
-
-      </div>
+      <TopNews/>
     </div>
   )
 }
