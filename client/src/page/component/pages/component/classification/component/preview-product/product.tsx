@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { documentModal } from '../../../../modal/modal';
-import { documentLinks } from '../../../../util';
 import { BiSearch } from 'react-icons/bi'
-import './product.css'
 import { Classify, ClassifyListItem } from './component';
+import { documentModal } from 'modal/modal';
+import { documentLinks } from 'util/index';
+import './product.css'
 
 export const Product = () => {
     const Navigate = useNavigate();

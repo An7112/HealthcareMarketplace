@@ -6,8 +6,8 @@ import { VscGitPullRequestCreate } from 'react-icons/vsc'
 import { AiOutlineClear, AiOutlineLoading, AiOutlineDatabase } from 'react-icons/ai'
 import Web3Modal from 'web3modal'
 import Web3 from 'web3'
-import HealthcareMarket from '../../contracts/HealthcareMarket.json'
-import { client } from '../../util'
+import HealthcareMarket from 'contracts/HealthcareMarket.json'
+import { client } from 'util/index'
 import './create.css'
 
 export default function CreateItem() {

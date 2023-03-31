@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { DiClojureAlt } from 'react-icons/di'
 import { NavLink } from 'react-router-dom';
-import { linkList } from '../../util/links/links';
-import { sidebarModal } from '../../modal/modal';
+import { linkList } from 'util/links/links';
+import { sidebarModal } from 'modal/modal';
 import { CgShoppingBag } from 'react-icons/cg'
 import Web3Modal from 'web3modal'
 import Web3 from 'web3';
-import HealthcareMarket from '../../contracts/HealthcareMarket.json'
+import HealthcareMarket from 'contracts/HealthcareMarket.json'
 import { useDispatch } from "react-redux";
+import { setCheckOwner } from 'store/reducers';
 import './sidebar.css'
-import { setCheckOwner } from '../../store/reducers';
 
 export default function Sidebar() {
 

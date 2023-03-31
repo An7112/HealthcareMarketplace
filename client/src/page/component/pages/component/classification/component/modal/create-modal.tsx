@@ -5,8 +5,8 @@ import { TbFileDescription } from 'react-icons/tb'
 import { AiOutlineClear, AiOutlineLoading, AiOutlineDatabase, AiOutlineClose } from 'react-icons/ai'
 import Web3Modal from 'web3modal'
 import Web3 from 'web3'
-import HealthcareMarket from '../../../../../../contracts/HealthcareMarket.json'
-import { client } from '../../../../../../util'
+import HealthcareMarket from 'contracts/HealthcareMarket.json'
+import { client } from 'util/infura-ipfs/ipfs'
 import './create-modal.css'
 
 export function CreateModal({ propsCallback }: any) {

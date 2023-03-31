@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import HealthcareMarket from '../../contracts/HealthcareMarket.json';
-import HealthcareToken from '../../contracts/HealthcareToken.json';
+import HealthcareToken from 'contracts/HealthcareToken.json';
 import Web3Modal from 'web3modal'
 import Web3 from "web3";
 

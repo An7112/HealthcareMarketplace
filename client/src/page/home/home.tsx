@@ -5,8 +5,8 @@ import { RiVirusLine } from 'react-icons/ri'
 import { AiOutlineBarChart } from 'react-icons/ai'
 import { TfiReload } from 'react-icons/tfi'
 import { BsChevronRight } from 'react-icons/bs'
-import './home.css'
 import TopNews from './component/News/topNews'
+import './home.css'
 
 export default function Home() {
 

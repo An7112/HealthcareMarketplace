@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { LoadingFrame } from "../../component/loading-frame/loadingFrame";
+import { LoadingFrame } from "component/loading-frame/loadingFrame";
 import { Activity, ItemDetailDropDown, Offer, Properties } from "./component/dropdown";
 import { AiFillCaretDown } from 'react-icons/ai'
 import { GiSelfLove } from 'react-icons/gi'
@@ -9,8 +9,8 @@ import { BsPatchCheckFill, BsShare } from 'react-icons/bs'
 import { BiDotsVerticalRounded } from 'react-icons/bi'
 import Web3Modal from 'web3modal'
 import Web3 from 'web3'
-import HealthcareMarket from '../../contracts/HealthcareMarket.json'
-import HealthcareToken from '../../contracts/HealthcareToken.json'
+import HealthcareMarket from 'contracts/HealthcareMarket.json'
+import HealthcareToken from 'contracts/HealthcareToken.json'
 import './item-detail.css'
 interface productType {
     id: number,
@@ -156,7 +156,7 @@ export default function DetailItem() {
                                         <LoadingFrame divWidth={"100px"} divHeight={"24px"} />
                                         :
                                         <>
-                                            <p>Volumn</p>
+                                            <p className="volumn">Volumn</p>
                                             <p style={{ overflow: "hidden" }}>
                                                 {nft?.price} HCMA</p>
                                         </>

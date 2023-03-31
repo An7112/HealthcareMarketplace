@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import HealthcareMarket from '../../../../../../contracts/HealthcareMarket.json'
+import HealthcareMarket from 'contracts/HealthcareMarket.json'
 import Web3Modal from 'web3modal'
 import Web3 from 'web3'
+import PaginatedList from 'util/paginated/paginationList'
+// import { LoadingFrame } from 'component/loading-frame/loadingFrame'
 import './classifyListItem.css'
-import PaginatedList from '../../../../../../util/paginated/paginationList'
 
 export const ClassifyListItem = () => {
 
     const [products, setProducts] = useState<any>([]);
     const [contract, setContract] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const init = async () => {
@@ -28,13 +30,13 @@ export const ClassifyListItem = () => {
 
     useEffect(() => {
         async function fetchProducts() {
+            setLoading(true);
             try {
                 const productCount = await contract.methods.lastProductId().call();
                 const productIds = Array.from(
                     { length: productCount },
                     (_, i) => i + 1
                 );
-                console.log(productIds);
                 const products = await Promise.all(
                     productIds.map(async (id) => {
                         const product = await contract.methods.products(id).call();
@@ -52,12 +54,16 @@ export const ClassifyListItem = () => {
                 setProducts(products.filter((product) => product.available && product.quantity > 0));
             } catch (error: any) {
                 console.log(error);
+            } finally {
+                setLoading(false)
             }
         }
         if (contract != null) {
             fetchProducts();
         }
     }, [contract])
+
+    console.log(loading);
 
     return (
         <PaginatedList items={products} itemsPerPage={8} />

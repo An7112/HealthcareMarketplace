@@ -1,6 +1,6 @@
 import React from 'react'
-import { Product } from '../../preview-product/product'
 import './treatDiseases.css'
+import { Product } from '../component/preview-product/product'
 
 export const TreatDiseases = () => {
 

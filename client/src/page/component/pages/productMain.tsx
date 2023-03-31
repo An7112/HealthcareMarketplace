@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
 import { BsPlusLg } from 'react-icons/bs'
 import { useSelector } from 'react-redux';
-import { HealthcareState } from '../../store/reducers';
-import { DisplayDocumentPage } from './component'
+import { DisplayPage } from './component'
 import { CreateModal } from './component/classification/component/modal/create-modal';
-import './product.css'
+import './productMain.css'
 
-interface RootState {
-  healthcare: HealthcareState;
+interface IProps {
+  modalProps: boolean,
+  titlePage: string,
+  dscPage: string,
 }
 
-export default function Product() {
+export default function ProductMain({modalProps, titlePage, dscPage}:IProps) {
 
   const [modal, setModal] = useState(false);
   const callbackUpdateModal = (callbackData: boolean) => {
@@ -23,10 +24,10 @@ export default function Product() {
       {modal === true && <CreateModal propsCallback={callbackUpdateModal} />}
       <div className='body-header'>
         <div className='header-item-view column'>
-          <span className='title-page'>Products</span>
-          <span>Only the owner can create items!</span>
+          <span className='title-page'>{titlePage}</span>
+          <span>{dscPage}</span>
         </div>
-        {checkOwner === true
+        {(checkOwner === true && modalProps === true)
           && <div className='header-item-view' onClick={() => setModal(true)}>
             <BsPlusLg className='icon-body-header' />
             <div className='item-view' >
@@ -35,7 +36,7 @@ export default function Product() {
           </div>
         }
       </div>
-      <DisplayDocumentPage />
+      <DisplayPage />
     </div>
   )
 }

@@ -1,5 +1,6 @@
 import {CgShoppingBag} from 'react-icons/cg'
 import {HiOutlineViewGrid} from 'react-icons/hi'
+import {BiPurchaseTagAlt} from 'react-icons/bi'
 import { sidebarModal } from '../../modal/modal'
 
 export const linkList: Array<sidebarModal> = [
@@ -12,6 +13,11 @@ export const linkList: Array<sidebarModal> = [
         link: "product?products=treat-diseases",
         name: "product",
         icon: <CgShoppingBag style={{ fontSize: '18' }} />
+    },
+    {
+        link: "purchase",
+        name: "purchase",
+        icon: <BiPurchaseTagAlt style={{ fontSize: '18' }}/>
     },
 ]
 
