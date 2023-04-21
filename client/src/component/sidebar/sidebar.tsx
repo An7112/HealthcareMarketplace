@@ -61,7 +61,8 @@ export default function Sidebar() {
                 to={`/${item.link}`}
                 key={item.name}
                 style={({ isActive }) => ({
-                  borderLeft: isActive ? '4px solid black' : '',
+                  borderRight: isActive ? '4px solid black' : '',
+                  backgroundColor: isActive ? '#f5f5f5' : ''
                 })}
                 className='nav-link'
               >

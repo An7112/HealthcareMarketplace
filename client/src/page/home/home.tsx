@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-// import ExchangeToken from './exchangeToken'
 import { FaHeartbeat, FaTooth } from 'react-icons/fa'
 import { RiVirusLine } from 'react-icons/ri'
 import { AiOutlineBarChart } from 'react-icons/ai'
@@ -143,7 +142,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-        {/* <ExchangeToken /> */}
       </div>
       {/*  */}
       <TopNews/>

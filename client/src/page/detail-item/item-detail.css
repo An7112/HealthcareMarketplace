@@ -44,7 +44,7 @@
     box-sizing: border-box;
     min-height: fit-content;
     overflow: hidden;
-    border: 1px solid #55B9A9;
+    border: 1px solid #e5e1e1;
 }
 
 .class-down-detail {
@@ -56,7 +56,7 @@
     background: border-box;
     background-color: #ffffff;
     min-height: fit-content;
-    border-top: 1px solid #bff0e8;
+    border-top: 1px solid #f5f5f5;
 }
 
 .class-down-grid {
@@ -78,7 +78,7 @@
     color: black;
     transition: ease-in-out 0.2s;
     background-color: white;
-    border: 1px solid #55B9A9;
+    border: 1px solid #55b9a9;
     cursor: pointer;
     font-size: 12px;
 }
@@ -160,7 +160,7 @@
 
 .class-properties .properties {
     font-size: 16px;
-    color: #55B9A9;
+    color: black;
     font-weight: 600;
 }
 
@@ -239,7 +239,7 @@
     background-color: #2a2f36;
     border: none;
     border-radius: 4px;
-    color: #55B9A9;
+    color: black;
     padding: 0;
     box-sizing: border-box;
     cursor: pointer;
@@ -364,7 +364,7 @@
 .class-info-owner img {
     width: 40px;
     height: 40px;
-    background-color: #55B9A9;
+    background-color: black;
     border-radius: 50%;
     overflow: hidden;
     object-fit: contain;
@@ -408,6 +408,9 @@
 .class-offer-content {
     height: 100%;
     grid-column: span 1 / span 1;
+    align-items: center;
+    justify-content: center;
+    display: flex;
 }
 
 .class-offer-content .offer-info {
@@ -415,11 +418,23 @@
     align-items: center;
     justify-content: flex-start;
     flex-direction: row;
-    gap: 4px;
+    gap: 0.5rem;
     width: 100%;
     height: 100%;
     color: black;
     font-weight: 700;
+}
+
+.class-offer-content .offer-info input{
+    width: 40px;
+    max-width: fit-content;
+    padding: 0.2rem;
+    border-radius: 4px;
+    border: none;
+}
+
+.class-offer-content .offer-info input:focus{
+    outline: none;
 }
 
 .class-offer-content .offer-info span {
@@ -436,7 +451,7 @@
 .input-resell-outer input {
     max-width: 24px;
     border-radius: 4px;
-    color: #55B9A9;
+    color: black;
     background-color: #2a2f36;
     padding: 2px;
     border: none;
@@ -575,7 +590,7 @@
     color: #55b9a9;
 }
 
-.chakra-wrap-right:hover {
+.chakra-stack-list .chakra-stack-grid-activity .chakra-wrap-right:hover {
     background-color: #55b9a9;
     color: white;
 }

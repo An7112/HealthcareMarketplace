@@ -5,7 +5,7 @@ import './classify.css'
 export const Classify = () => {
     return (
         <div className='class-classify-main'>
-            <div className='class-classify title'>
+            <>
                 <div className='classify-item single'>
                     <span className='span-block-center'>
                         <div className='frame-icon-check'>
@@ -13,7 +13,7 @@ export const Classify = () => {
                         </div>
                     </span>
                 </div>
-                <div className='classify-item rows'>
+                <div className='classify-item rows name'>
                     <span className='span-block-center'>
                         Product Name
                     </span>
@@ -35,11 +35,10 @@ export const Classify = () => {
                 </div>
                 <div className='classify-item double'>
                     <span className='span-block-center'>
-                        Created Day
+                        Status
                     </span>
                 </div>
-            </div>
-            <div className='line-bottom'></div>
+            </>
         </div>
     )
 }

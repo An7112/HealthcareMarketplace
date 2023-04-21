@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { GrFormPrevious, GrFormNext } from 'react-icons/gr'
 import './pagination.css'
+import { useDispatch, useSelector } from 'react-redux';
+import { setEndIndex, setStartIndex } from 'store/reducers';
 
 interface Props {
   pageCount: number;
@@ -9,6 +11,9 @@ interface Props {
 }
 
 const Pagination: React.FC<Props> = ({ pageCount, onPageChange, initialPage = 1 }) => {
+
+  const dispatch = useDispatch();
+  const { productCount } = useSelector((state: any) => state);
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [inputPage, setInputPage] = useState(initialPage + 1);
 
@@ -17,6 +22,23 @@ const Pagination: React.FC<Props> = ({ pageCount, onPageChange, initialPage = 1 
     setInputPage(initialPage + 1);
   }, [initialPage]);
 
+
+  useEffect(() => {
+    const newStartIndex = currentPage * 8;
+    const newEndIndex = (currentPage + 1) * 8;
+    if(currentPage <= 0){
+      dispatch(setStartIndex(newStartIndex));
+      dispatch(setEndIndex(newEndIndex));
+    }else if (currentPage > 0 && newEndIndex <= productCount){
+      dispatch(setStartIndex(newStartIndex + 1));
+      dispatch(setEndIndex(newEndIndex));
+    }else{
+      dispatch(setStartIndex(newStartIndex + 1));
+      dispatch(setEndIndex(productCount));
+    }
+
+  }, [currentPage, dispatch, productCount]);
+
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
     onPageChange(pageNumber);
@@ -24,6 +46,11 @@ const Pagination: React.FC<Props> = ({ pageCount, onPageChange, initialPage = 1 
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputPage(Number(event.target.value));
+    const pageNumber = Number(event.target.value) - 1;
+    const newStartIndex = pageNumber * 8;
+    const newEndIndex = (pageNumber + 1) * 8;
+    setStartIndex(newStartIndex);
+    setEndIndex(newEndIndex);
   };
 
   const handleInputBlur = () => {

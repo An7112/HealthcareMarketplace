@@ -7,20 +7,22 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 contract HealthcareToken is ERC20 {
     using SafeMath for uint256;
     mapping(address => mapping(address => uint256)) private _allowances;
+    uint8 private constant _decimals = 18;
+    uint256 private constant _initialSupply = 1000000 * 10**_decimals;
+    uint256 private constant _tokenRate = 1;
 
-    constructor() ERC20("HealthcareMarket Token", "HCMA") {
-        uint256 initialSupply = 1000000 * 10 ** decimals();
-        _mint(msg.sender, initialSupply);
+     constructor() ERC20("HealthcareMarket Token", "HCMA") {
+        _mint(msg.sender, _initialSupply);
     }
 
     function decimals() public view virtual override returns (uint8) {
-        return 18;
+        return _decimals;
     }
 
     function buyToken() public payable {
         require(msg.value > 0, "Amount should be greater than zero.");
         uint256 ethAmount = msg.value;
-        uint256 tokenAmount = ethAmount.mul(10 ** 18).div(1);
+        uint256 tokenAmount = ethAmount.div(_tokenRate);
         _mint(msg.sender, tokenAmount);
     }
 
@@ -30,10 +32,12 @@ contract HealthcareToken is ERC20 {
         payable(msg.sender).transfer(amount);
     }
 
-    function approve(
-        address spender,
-        uint256 amount
-    ) public virtual override returns (bool) {
+    function approve(address spender, uint256 amount)
+        public
+        virtual
+        override
+        returns (bool)
+    {
         _approve(msg.sender, spender, amount);
         return true;
     }

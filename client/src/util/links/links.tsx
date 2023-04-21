@@ -1,4 +1,4 @@
-import {CgShoppingBag} from 'react-icons/cg'
+import {CgShoppingBag, CgProfile} from 'react-icons/cg'
 import {HiOutlineViewGrid} from 'react-icons/hi'
 import {BiPurchaseTagAlt} from 'react-icons/bi'
 import { sidebarModal } from '../../modal/modal'
@@ -15,9 +15,9 @@ export const linkList: Array<sidebarModal> = [
         icon: <CgShoppingBag style={{ fontSize: '18' }} />
     },
     {
-        link: "purchase",
-        name: "purchase",
-        icon: <BiPurchaseTagAlt style={{ fontSize: '18' }}/>
+        link: "profile",
+        name: "profile",
+        icon: <CgProfile style={{ fontSize: '18' }}/>
     },
 ]
 

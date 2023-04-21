@@ -1,0 +1,655 @@
+    // function buy(
+    //     uint256 productId
+    // ) public nonReentrant productExists(productId) {
+    //     Product storage product = products[productId];
+    //     require(product.quantity > 0, "Product is out of stock.");
+
+    //     uint256 price = product.price;
+
+    //     // Approve token transfer from buyer to HealthcareMarket
+    //     token.approve(address(this), price);
+    //     // Transfer tokens from buyer to HealthcareMarket
+    //     token.transferFrom(msg.sender, address(this), price);
+    //     // Transfer tokens from HealthcareMarket to owner
+    //     token.transfer(owner, price);
+
+    //     product.quantity = product.quantity.sub(1);
+
+    //     bool purchaseExist = false;
+    //     for (uint256 i = 0; i < lastPurchaseId; i++) {
+    //         Purchase storage purchase = purchases[i];
+    //         if (purchase.buyer == msg.sender && purchase.delivered == false) {
+    //             purchase.products.push(productId);
+    //             purchaseExist = true;
+    //             break;
+    //         }
+    //     }
+
+    //     if (!purchaseExist) {
+    //         Purchase storage newPurchase = purchases[lastPurchaseId];
+    //         newPurchase.id = lastPurchaseId;
+    //         newPurchase.buyer = msg.sender;
+    //         newPurchase.products.push(productId);
+    //         lastPurchaseId++;
+    //     }
+
+    //     emit PurchaseMade(lastPurchaseId, msg.sender, price);
+    // }
+    \
+
+    
+    // function getPurchasedProductsByAddress(address buyer)
+    //     public
+    //     view
+    //     returns (PurchasedProduct[] memory)
+    // {
+    //     uint256[] memory userPurchaseIds = userPurchases[buyer];
+    //     uint256 count = 0;
+    //     for (uint256 i = 0; i < userPurchaseIds.length; i++) {
+    //         uint256 purchaseId = userPurchaseIds[i];
+    //         Purchase storage purchase = purchases[purchaseId];
+    //         for (uint256 j = 0; j < purchase.products.length; j++) {
+    //             if (purchase.products[j].buyer == buyer) {
+    //                 count++;
+    //             }
+    //         }
+    //     }
+
+    //     PurchasedProduct[] memory purchasedProducts = new PurchasedProduct[](
+    //         count
+    //     );
+    //     count = 0;
+
+    //     for (uint256 i = 0; i < userPurchaseIds.length; i++) {
+    //         uint256 purchaseId = userPurchaseIds[i];
+    //         Purchase storage purchase = purchases[purchaseId];
+    //         for (uint256 j = 0; j < purchase.products.length; j++) {
+    //             if (purchase.products[j].buyer == buyer) {
+    //                 PurchasedProduct
+    //                     memory purchasedProduct = PurchasedProduct({
+    //                         buyer: buyer,
+    //                         productId: purchase.products[j].productId,
+    //                         productName: purchase.products[j].productName,
+    //                         price: purchase.products[j].price,
+    //                         imageURL: purchase.products[j].imageURL,
+    //                         status: purchase.status
+    //                     });
+    //                 purchasedProducts[count] = purchasedProduct;
+    //                 count++;
+    //             }
+    //         }
+    //     }
+
+    //     return purchasedProducts;
+    // }
+
+    function buy(uint256 productId)
+        public
+        nonReentrant
+        productExists(productId)
+    {
+        Product storage product = products[productId];
+        require(product.quantity > 0, "Product is out of stock.");
+
+        uint256 price = product.price;
+
+        // Approve token transfer from buyer to HealthcareMarket
+        token.approve(address(this), price);
+        // Transfer tokens from buyer to HealthcareMarket
+        token.transferFrom(msg.sender, address(this), price);
+        // Transfer tokens from HealthcareMarket to owner
+        token.transfer(owner, price);
+
+        product.quantity = product.quantity.sub(1);
+
+        bool purchaseExist = false;
+        for (uint256 i = 0; i < lastPurchaseId; i++) {
+            Purchase storage purchase = purchases[i];
+            if (purchase.buyer == msg.sender && purchase.delivered == false) {
+                PurchasedProduct memory purchasedProduct = PurchasedProduct({
+                    buyer: msg.sender,
+                    productName: product.name,
+                    productId: productId,
+                    price: product.price,
+                    imageURL: product.imageURL,
+                    status: PurchaseStatus.Preparing
+                });
+                purchase.products.push(purchasedProduct);
+                purchaseExist = true;
+                break;
+            }
+        }
+
+        if (!purchaseExist) {
+            PurchasedProduct memory purchasedProduct = PurchasedProduct({
+                buyer: msg.sender,
+                productName: product.name,
+                productId: productId,
+                price: product.price,
+                imageURL: product.imageURL,
+                status: PurchaseStatus.Preparing
+            });
+            Purchase storage newPurchase = purchases[lastPurchaseId];
+            newPurchase.id = lastPurchaseId;
+            newPurchase.buyer = msg.sender;
+            newPurchase.products.push(purchasedProduct);
+            newPurchase.delivered = false;
+            newPurchase.status = PurchaseStatus.Preparing;
+            lastPurchaseId++;
+        }
+
+        userPurchases[msg.sender].push(productId);
+
+        emit PurchaseMade(lastPurchaseId, msg.sender, price);
+    }
+
+
+
+    ///Token
+
+    // SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+
+contract HealthcareToken is ERC20 {
+    using SafeMath for uint256;
+    mapping(address => mapping(address => uint256)) private _allowances;
+
+    constructor() ERC20("HealthcareMarket Token", "HCMA") {
+        uint256 initialSupply = 1000000 * 10 ** decimals();
+        _mint(msg.sender, initialSupply);
+    }
+
+    function decimals() public view virtual override returns (uint8) {
+        return 18;
+    }
+
+    function buyToken() public payable {
+        require(msg.value > 0, "Amount should be greater than zero.");
+        uint256 ethAmount = msg.value;
+        uint256 tokenAmount = ethAmount.mul(100);
+        _mint(msg.sender, tokenAmount);
+    }
+
+    function withdraw(uint256 amount) public {
+        require(balanceOf(msg.sender) >= amount, "Insufficient balance.");
+        _burn(msg.sender, amount);
+        payable(msg.sender).transfer(amount);
+    }
+
+    function approve(
+        address spender,
+        uint256 amount
+    ) public virtual override returns (bool) {
+        _approve(msg.sender, spender, amount);
+        return true;
+    }
+
+    function _approve(
+        address owner,
+        address spender,
+        uint256 amount
+    ) internal virtual override {
+        require(owner != address(0), "ERC20: approve from the zero address");
+        require(spender != address(0), "ERC20: approve to the zero address");
+
+        _allowances[owner][spender] = amount;
+        emit Approval(owner, spender, amount);
+    }
+
+    function transferFrom(
+        address sender,
+        address recipient,
+        uint256 amount
+    ) public virtual override returns (bool) {
+        require(sender != address(0), "ERC20: transfer from the zero address");
+        require(recipient != address(0), "ERC20: transfer to the zero address");
+
+        uint256 currentAllowance = _allowances[sender][msg.sender];
+        require(
+            currentAllowance >= amount,
+            "ERC20: transfer amount exceeds allowance"
+        );
+        _approve(sender, msg.sender, currentAllowance - amount);
+
+        _transfer(sender, recipient, amount);
+        return true;
+    }
+
+    function balanceOf(address account) public view override returns (uint256) {
+        return super.balanceOf(account) / 10**decimals();
+    }
+}
+
+
+function buy(
+        uint256[] memory productIds,
+        string memory buyer
+    ) public nonReentrant {
+        uint256 totalPrice = 0;
+        for (uint256 i = 0; i < productIds.length; i++) {
+            uint256 productId = productIds[i];
+
+            Product storage product = products[productId];
+            require(product.available, "Product does not exist.");
+            require(product.quantity > 0, "Product is out of stock.");
+
+            totalPrice = totalPrice.add(product.price);
+
+            product.quantity = product.quantity.sub(1);
+
+            if (purchases[productId].id == 0) {
+                purchases[productId] = Purchase(
+                    buyer,
+                    productId,
+                    product.name,
+                    product.description,
+                    product.price,
+                    product.imageURL,
+                    1,
+                    true,
+                    PurchaseStatus.Preparing
+                );
+            } else {
+                purchases[productId].qtyPurchase = purchases[productId]
+                    .qtyPurchase
+                    .add(1);
+            }
+
+            emit PurchaseMade(
+                buyer,
+                ++lastPurchaseId,
+                product.name,
+                product.description,
+                product.price,
+                product.imageURL,
+                purchases[productId].qtyPurchase
+            );
+        }
+        uint256 tokenAmount = totalPrice.div(
+            token.balanceOf(address(this)).div(10 ** token.decimals())
+        );
+        require(
+            tokenAmount <= token.allowance(msg.sender, address(this)),
+            "Not enough token allowance."
+        );
+
+        require(
+            token.transferFrom(msg.sender, owner, tokenAmount),
+            "Token transfer failed."
+        );
+    }
+
+
+
+
+
+    ////
+
+    // SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "./HealthcareToken.sol";
+
+contract HealthcareMarket is ReentrancyGuard {
+    using SafeMath for uint256;
+
+    HealthcareToken public token;
+
+    receive() external payable {}
+
+    struct Product {
+        uint256 id;
+        string name;
+        string description;
+        uint256 price;
+        string imageURL;
+        uint256 quantity;
+        bool available;
+    }
+
+    enum PurchaseStatus {
+        Preparing,
+        Shipping,
+        Delivered
+    }
+
+    struct Purchase {
+        string buyer;
+        uint256 id;
+        string name;
+        string description;
+        uint256 price;
+        string imageURL;
+        uint256 qtyPurchase;
+        bool unavailable;
+        PurchaseStatus status;
+    }
+
+    mapping(uint256 => Product) public products;
+    mapping(address => bool) public kyc;
+    mapping(uint256 => Purchase) public purchases;
+    mapping(address => uint256) public balances;
+
+    uint256 public lastProductId;
+    uint256 public lastPurchaseId;
+
+    address private owner;
+
+    modifier onlyOwner() {
+        require(
+            msg.sender == owner,
+            "Only contract owner can call this function."
+        );
+        _;
+    }
+
+    modifier productExists(uint256 productId) {
+        require(products[productId].available, "Product does not exist.");
+        _;
+    }
+
+    event ProductAdded(
+        uint256 productId,
+        string name,
+        string description,
+        uint256 price,
+        string imageURL,
+        uint256 quantity
+    );
+    event ProductEdited(
+        uint256 productId,
+        string name,
+        string description,
+        uint256 price,
+        string imageURL,
+        uint256 quantity
+    );
+    event ProductRemoved(uint256 productId);
+    event PurchaseMade(
+        string buyer,
+        uint256 purchaseId,
+        string name,
+        string description,
+        uint256 price,
+        string imageURL,
+        uint256 qtyPurchase
+    );
+    event PurchaseDelivered(uint256 purchaseId);
+
+    constructor(address tokenAddress) {
+        owner = msg.sender;
+        token = HealthcareToken(tokenAddress);
+    }
+
+    function getOwnerAddress() public view returns (address) {
+        return owner;
+    }
+
+    function validateProduct(
+        string memory name,
+        string memory description,
+        uint256 price,
+        uint256 quantity
+    ) internal pure {
+        require(bytes(name).length > 0, "Product name is required.");
+        require(
+            bytes(description).length > 0,
+            "Product description is required."
+        );
+        require(price > 0, "Product price must be greater than zero.");
+        require(quantity > 0, "Product quantity must be greater than zero.");
+    }
+
+    function addProduct(
+        string memory name,
+        string memory description,
+        uint256 price,
+        string memory imageURL,
+        uint256 quantity
+    ) public onlyOwner returns (uint256) {
+        validateProduct(name, description, price, quantity);
+        uint256 existingProductId = 0;
+        for (uint256 i = 1; i <= lastProductId; i++) {
+            if (
+                keccak256(bytes(products[i].name)) == keccak256(bytes(name)) &&
+                products[i].available
+            ) {
+                existingProductId = i;
+                break;
+            }
+        }
+        if (existingProductId > 0) {
+            products[existingProductId].quantity = products[existingProductId]
+                .quantity
+                .add(quantity);
+            emit ProductAdded(
+                existingProductId,
+                name,
+                description,
+                price,
+                imageURL,
+                products[existingProductId].quantity
+            );
+            return existingProductId;
+        } else {
+            lastProductId++;
+            products[lastProductId] = Product(
+                lastProductId,
+                name,
+                description,
+                price,
+                imageURL,
+                quantity,
+                true
+            );
+            emit ProductAdded(
+                lastProductId,
+                name,
+                description,
+                price,
+                imageURL,
+                quantity
+            );
+            return lastProductId;
+        }
+    }
+
+    function editProduct(
+        uint256 productId,
+        string memory name,
+        string memory description,
+        uint256 price,
+        string memory imageURL,
+        uint256 quantity
+    ) public onlyOwner productExists(productId) {
+        require(products[productId].available, "Product does not exist.");
+        products[productId].name = name;
+        products[productId].description = description;
+        products[productId].price = price;
+        products[productId].imageURL = imageURL;
+        products[productId].quantity = quantity;
+        emit ProductEdited(
+            productId,
+            name,
+            description,
+            price,
+            imageURL,
+            quantity
+        );
+    }
+
+    function removeProduct(
+        uint256 productId
+    ) public onlyOwner productExists(productId) {
+        require(products[productId].available, "Product does not exist.");
+        products[productId].available = false;
+        emit ProductRemoved(productId);
+
+        // Update lastProductId if the removed product was the last one
+        if (productId == lastProductId) {
+            lastProductId--;
+        }
+    }
+
+   function buy(
+        uint256[] memory productIds,
+        string memory buyer
+    ) public nonReentrant {
+        uint256 totalPrice = 0;
+        for (uint256 i = 0; i < productIds.length; i++) {
+            uint256 productId = productIds[i];
+
+            Product storage product = products[productId];
+            require(product.available, "Product does not exist.");
+            require(product.quantity > 0, "Product is out of stock.");
+
+            totalPrice = totalPrice.add(product.price);
+
+            product.quantity = product.quantity.sub(1);
+
+            if (purchases[productId].id == 0) {
+                purchases[productId] = Purchase(
+                    buyer,
+                    productId,
+                    product.name,
+                    product.description,
+                    product.price,
+                    product.imageURL,
+                    1,
+                    true,
+                    PurchaseStatus.Preparing
+                );
+            } else {
+                purchases[productId].qtyPurchase = purchases[productId]
+                    .qtyPurchase
+                    .add(1);
+            }
+
+            emit PurchaseMade(
+                buyer,
+                ++lastPurchaseId,
+                product.name,
+                product.description,
+                product.price,
+                product.imageURL,
+                purchases[productId].qtyPurchase
+            );
+        }
+        uint256 tokenAmount = totalPrice.div(
+            token.balanceOf(address(this)).div(10 ** token.decimals())
+        );
+        require(
+            tokenAmount <= token.allowance(msg.sender, address(this)),
+            "Not enough token allowance."
+        );
+
+        require(
+            token.transferFrom(msg.sender, owner, tokenAmount),
+            "Token transfer failed."
+        );
+    }
+
+    function deliver(uint256 purchaseId) public onlyOwner {
+        Purchase storage purchase = purchases[purchaseId];
+        purchase.status = PurchaseStatus.Shipping; // set status to Shipping
+        emit PurchaseDelivered(purchaseId);
+    }
+
+    function confirmDelivery(uint256 purchaseId) public {
+        Purchase storage purchase = purchases[purchaseId];
+        require(
+            purchase.status == PurchaseStatus.Shipping,
+            "Purchase is not in shipping status."
+        );
+        purchase.status = PurchaseStatus.Delivered; // set status to Delivered
+    }
+
+    function register() public {
+        require(!kyc[msg.sender], "User already registered.");
+        kyc[msg.sender] = true;
+    }
+
+    function unregister() public {
+        require(kyc[msg.sender], "User not registered.");
+        kyc[msg.sender] = false;
+    }
+
+    function isRegistered(address user) public view returns (bool) {
+        return kyc[user];
+    }
+
+    function getAllPurchasedProducts(
+        uint256 startIndex,
+        uint256 endIndex
+    ) public view returns (Purchase[] memory) {
+        require(
+            startIndex <= endIndex && endIndex <= lastPurchaseId,
+            "Invalid start and end indices."
+        );
+        uint256 numAvailablePurchased = 0;
+        for (uint256 i = startIndex; i <= endIndex; i++) {
+            if (purchases[i].unavailable) {
+                numAvailablePurchased++;
+            }
+        }
+
+        Purchase[] memory allPurchases = new Purchase[](numAvailablePurchased);
+
+        uint256 currentPurchasedIndex = 0;
+
+        for (uint256 i = startIndex; i <= endIndex; i++) {
+            if (purchases[i].unavailable) {
+                allPurchases[currentPurchasedIndex] = purchases[i];
+                currentPurchasedIndex++;
+            }
+        }
+
+        return allPurchases;
+    }
+
+    function copyProductArray(
+        uint256[] storage array
+    ) internal view returns (Product[] memory) {
+        Product[] memory result = new Product[](array.length);
+        for (uint256 i = 0; i < array.length; i++) {
+            result[i] = products[array[i]];
+        }
+        return result;
+    }
+
+    function getAvailableProducts(
+        uint256 start,
+        uint256 end
+    ) public view returns (Product[] memory) {
+        require(
+            start <= end && end <= lastProductId,
+            "Invalid start and end indices."
+        );
+
+        uint256 numAvailableProducts = 0;
+        for (uint256 i = start; i <= end; i++) {
+            if (products[i].available) {
+                numAvailableProducts++;
+            }
+        }
+
+        Product[] memory availableProducts = new Product[](
+            numAvailableProducts
+        );
+        uint256 currentProductIndex = 0;
+
+        for (uint256 i = start; i <= end; i++) {
+            if (products[i].available) {
+                availableProducts[currentProductIndex] = products[i];
+                currentProductIndex++;
+            }
+        }
+
+        return availableProducts;
+    }
+}

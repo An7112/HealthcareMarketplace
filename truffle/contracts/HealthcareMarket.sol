@@ -1,4 +1,3 @@
-
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -11,6 +10,8 @@ contract HealthcareMarket is ReentrancyGuard {
 
     HealthcareToken public token;
 
+    receive() external payable {}
+
     struct Product {
         uint256 id;
         string name;
@@ -21,13 +22,25 @@ contract HealthcareMarket is ReentrancyGuard {
         bool available;
     }
 
-    struct Purchase {
-        uint256 id;
-        address buyer;
-        uint256[] products;
-        bool delivered;
+    enum PurchaseStatus {
+        Preparing,
+        Shipping,
+        Delivered
     }
 
+    struct Purchase {
+        string buyer;
+        uint256 id;
+        string name;
+        string description;
+        uint256 price;
+        string imageURL;
+        uint256 qtyPurchase;
+        bool unavailable;
+        PurchaseStatus status;
+    }
+
+    mapping(address => mapping(uint256 => uint256)) public cart;
     mapping(uint256 => Product) public products;
     mapping(address => bool) public kyc;
     mapping(uint256 => Purchase) public purchases;
@@ -35,6 +48,7 @@ contract HealthcareMarket is ReentrancyGuard {
 
     uint256 public lastProductId;
     uint256 public lastPurchaseId;
+    uint256[] public allProductIds;
 
     address private owner;
 
@@ -68,15 +82,28 @@ contract HealthcareMarket is ReentrancyGuard {
         uint256 quantity
     );
     event ProductRemoved(uint256 productId);
-    event PurchaseMade(uint256 purchaseId, address buyer, uint256 totalPrice);
+    event PurchaseMade(
+        string buyer,
+        uint256 purchaseId,
+        string name,
+        string description,
+        uint256 price,
+        string imageURL,
+        uint256 qtyPurchase
+    );
     event PurchaseDelivered(uint256 purchaseId);
+    event ProductAddedToCart(
+        address buyer,
+        uint256 productId,
+        uint256 quantity
+    );
 
     constructor(address tokenAddress) {
         owner = msg.sender;
         token = HealthcareToken(tokenAddress);
     }
 
-    function getOwnerAddress () public view returns (address) {
+    function getOwnerAddress() public view returns (address) {
         return owner;
     }
 
@@ -103,25 +130,50 @@ contract HealthcareMarket is ReentrancyGuard {
         uint256 quantity
     ) public onlyOwner returns (uint256) {
         validateProduct(name, description, price, quantity);
-        lastProductId++;
-        products[lastProductId] = Product(
-            lastProductId,
-            name,
-            description,
-            price,
-            imageURL,
-            quantity,
-            true
-        );
-        emit ProductAdded(
-            lastProductId,
-            name,
-            description,
-            price,
-            imageURL,
-            quantity
-        );
-        return lastProductId;
+        uint256 existingProductId = 0;
+        for (uint256 i = 1; i <= lastProductId; i++) {
+            if (
+                keccak256(bytes(products[i].name)) == keccak256(bytes(name)) &&
+                products[i].available
+            ) {
+                existingProductId = i;
+                break;
+            }
+        }
+        if (existingProductId > 0) {
+            products[existingProductId].quantity = products[existingProductId]
+                .quantity
+                .add(quantity);
+            emit ProductAdded(
+                existingProductId,
+                name,
+                description,
+                price,
+                imageURL,
+                products[existingProductId].quantity
+            );
+            return existingProductId;
+        } else {
+            lastProductId++;
+            products[lastProductId] = Product(
+                lastProductId,
+                name,
+                description,
+                price,
+                imageURL,
+                quantity,
+                true
+            );
+            emit ProductAdded(
+                lastProductId,
+                name,
+                description,
+                price,
+                imageURL,
+                quantity
+            );
+            return lastProductId;
+        }
     }
 
     function editProduct(
@@ -162,41 +214,64 @@ contract HealthcareMarket is ReentrancyGuard {
     }
 
     function buy(
-        uint256 productId
-    ) public nonReentrant productExists(productId) {
-        Product storage product = products[productId];
-        require(product.quantity > 0, "Product is out of stock.");
+        uint256[] memory productIds,
+        uint256[] memory quantities,
+        string memory buyer
+    ) public nonReentrant {
+        require(productIds.length == quantities.length, "Invalid input.");
 
-        uint256 price = product.price;
+        uint256 totalAmount = 0;
+        for (uint256 i = 0; i < productIds.length; i++) {
+            uint256 productId = productIds[i];
+            uint256 quantity = quantities[i];
+
+            Product storage product = products[productId];
+            require(product.available, "Product does not exist.");
+            require(product.quantity >= quantity, "Product is out of stock.");
+
+            uint256 price = product.price * quantity * 10 ** 18;
+            totalAmount = totalAmount.add(price);
+
+            product.quantity = product.quantity.sub(quantity);
+
+            if (
+                keccak256(bytes(purchases[productId].buyer)) !=
+                keccak256(bytes(buyer))
+            ) {
+                purchases[productId] = Purchase(
+                    buyer,
+                    productId,
+                    product.name,
+                    product.description,
+                    product.price,
+                    product.imageURL,
+                    quantity,
+                    true,
+                    PurchaseStatus.Preparing
+                );
+            } else {
+                purchases[productId].qtyPurchase = purchases[productId]
+                    .qtyPurchase
+                    .add(quantity);
+            }
+
+            emit PurchaseMade(
+                buyer,
+                ++lastPurchaseId,
+                product.name,
+                product.description,
+                product.price,
+                product.imageURL,
+                quantity
+            );
+        }
 
         // Approve token transfer from buyer to HealthcareMarket
-        token.approve(address(this), price);
+        token.approve(address(this), totalAmount);
         // Transfer tokens from buyer to HealthcareMarket
-        token.transferFrom(msg.sender, address(this), price);
+        token.transferFrom(msg.sender, address(this), totalAmount);
         // Transfer tokens from HealthcareMarket to owner
-        token.transfer(owner, price);
-
-        product.quantity = product.quantity.sub(1);
-
-        bool purchaseExist = false;
-        for (uint256 i = 0; i < lastPurchaseId; i++) {
-            Purchase storage purchase = purchases[i];
-            if (purchase.buyer == msg.sender && purchase.delivered == false) {
-                purchase.products.push(productId);
-                purchaseExist = true;
-                break;
-            }
-        }
-
-        if (!purchaseExist) {
-            Purchase storage newPurchase = purchases[lastPurchaseId];
-            newPurchase.id = lastPurchaseId;
-            newPurchase.buyer = msg.sender;
-            newPurchase.products.push(productId);
-            lastPurchaseId++;
-        }
-
-        emit PurchaseMade(lastPurchaseId, msg.sender, price);
+        token.transfer(owner, totalAmount);
     }
 
     function withdrawBalance() public nonReentrant {
@@ -207,17 +282,18 @@ contract HealthcareMarket is ReentrancyGuard {
     }
 
     function deliver(uint256 purchaseId) public onlyOwner {
-        require(
-            purchases[purchaseId].buyer != address(0),
-            "Purchase does not exist."
-        );
-        require(purchases[purchaseId].id != 0, "Purchase does not exist.");
-        require(
-            !purchases[purchaseId].delivered,
-            "Purchase already delivered."
-        );
-        purchases[purchaseId].delivered = true;
+        Purchase storage purchase = purchases[purchaseId];
+        purchase.status = PurchaseStatus.Shipping; // set status to Shipping
         emit PurchaseDelivered(purchaseId);
+    }
+
+    function confirmDelivery(uint256 purchaseId) public {
+        Purchase storage purchase = purchases[purchaseId];
+        require(
+            purchase.status == PurchaseStatus.Shipping,
+            "Purchase is not in shipping status."
+        );
+        purchase.status = PurchaseStatus.Delivered; // set status to Delivered
     }
 
     function register() public {
@@ -234,37 +310,39 @@ contract HealthcareMarket is ReentrancyGuard {
         return kyc[user];
     }
 
-    function getPurchaseIdsByBuyer(
-        address buyer
-    ) public view returns (uint256[] memory) {
-        uint256[] memory purchaseIds = new uint256[](lastPurchaseId);
-        uint256 numPurchases = 0;
-        for (uint256 i = 1; i <= lastPurchaseId; i++) {
-            if (purchases[i].buyer == buyer) {
-                purchaseIds[numPurchases] = purchases[i].id;
-                numPurchases++;
+    function getAllPurchasedProducts(
+        uint256 startIndex,
+        uint256 endIndex,
+        string memory buyer
+    ) public view returns (Purchase[] memory) {
+        require(
+            startIndex <= endIndex,
+            "Invalid start and end indices."
+        );
+        uint256 numAvailablePurchased = 0;
+        for (uint256 i = startIndex; i <= endIndex; i++) {
+            if (
+                purchases[i].unavailable &&
+                keccak256(bytes(purchases[i].buyer)) == keccak256(bytes(buyer))
+            ) {
+                numAvailablePurchased++;
             }
         }
-        uint256[] memory result = new uint256[](numPurchases);
-        for (uint256 i = 0; i < numPurchases; i++) {
-            result[i] = purchaseIds[i];
-        }
-        return result;
-    }
 
-    function getPurchaseById(
-        uint256 purchaseId
-    ) public view returns (address, Product[] memory, bool) {
-        require(
-            purchases[purchaseId].buyer != address(0),
-            "Purchase does not exist."
-        );
-        require(purchases[purchaseId].id != 0, "Purchase does not exist.");
-        return (
-            purchases[purchaseId].buyer,
-            copyProductArray(purchases[purchaseId].products),
-            purchases[purchaseId].delivered
-        );
+        Purchase[] memory allPurchases = new Purchase[](numAvailablePurchased);
+
+        uint256 currentPurchasedIndex = 0;
+
+        for (uint256 i = startIndex; i <= endIndex; i++) {
+            if (
+                purchases[i].unavailable &&
+                keccak256(bytes(purchases[i].buyer)) == keccak256(bytes(buyer))
+            ) {
+                allPurchases[currentPurchasedIndex] = purchases[i];
+                currentPurchasedIndex++;
+            }
+        }
+        return allPurchases;
     }
 
     function copyProductArray(
@@ -277,23 +355,57 @@ contract HealthcareMarket is ReentrancyGuard {
         return result;
     }
 
-    function getAvailableProducts() public view returns (Product[] memory) {
+    function getAvailableProducts(
+        uint256 start,
+        uint256 end
+    ) public view returns (Product[] memory) {
+        require(
+            start <= end && end <= lastProductId,
+            "Invalid start and end indices."
+        );
+
         uint256 numAvailableProducts = 0;
-        for (uint256 i = 1; i <= lastProductId; i++) {
+        for (uint256 i = start; i <= end; i++) {
             if (products[i].available) {
                 numAvailableProducts++;
             }
         }
+
         Product[] memory availableProducts = new Product[](
             numAvailableProducts
         );
         uint256 currentProductIndex = 0;
-        for (uint256 i = 1; i <= lastProductId; i++) {
+
+        for (uint256 i = start; i <= end; i++) {
             if (products[i].available) {
                 availableProducts[currentProductIndex] = products[i];
                 currentProductIndex++;
             }
         }
+
         return availableProducts;
+    }
+
+    //lấy danh sách tất cả các ID sản phẩm đang có sẵn
+    function getAllProductIds() public view returns (uint256[] memory) {
+        return allProductIds;
+    }
+
+    //Tìm kiếm sản phẩm dựa trên tên
+    function searchProductsByName(
+        string memory name
+    ) public view returns (uint256[] memory) {
+        uint256[] memory results = new uint256[](lastProductId);
+        uint256 count = 0;
+        for (uint256 i = 1; i <= lastProductId; i++) {
+            if (
+                products[i].available &&
+                keccak256(bytes(products[i].name)) == keccak256(bytes(name))
+            ) {
+                results[count] = i;
+                count++;
+            }
+        }
+        return results;
     }
 }

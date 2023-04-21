@@ -1,12 +1,31 @@
 .class-classify-main {
     width: 100%;
-    cursor: pointer;
-    transform-origin: center center;    
     border-bottom: 1px solid rgb(207, 216, 223);
     box-sizing: border-box;
+    display: grid;
+    align-items: start;
+    justify-content: center;
+    padding: 1rem 0;
+    gap: 1rem;
+    grid-template-columns: repeat(18, minmax(0, 1fr));
 }
 
-.class-classify-main.item:hover {
+.class-classify-main.item{
+    padding: 0.1rem;
+}
+
+
+.class-classify {
+    display: grid;
+    transform-origin: center center;   
+    cursor: pointer;
+    grid-template-columns: repeat(17, minmax(0, 1fr));
+    column-gap: 1rem;
+    grid-column: span 17 / span 17;
+    width: 100%;
+    align-items: center;
+}
+.class-classify:hover{
     border-radius: 4px;
     background-color: #55B9A9;
     transition: ease-in-out 0.2s;
@@ -16,16 +35,13 @@
     border-bottom: none;
 }
 
-.class-classify {
-    display: grid;
-    grid-template-columns: repeat(18, minmax(0, 1fr));
-    column-gap: 1rem;
-    width: 100%;
-    align-items: center;
-}
-
 .class-classify.title{
     margin: 12px 0;
+}
+
+.classify-item.name {
+    display: grid;
+    grid-column: span 6 / span 6;
 }
 
 .classify-item {
@@ -35,6 +51,7 @@
 
 .classify-item.single {
     grid-column: span 1 / span 1;
+    height: 100%;
 }
 
 .classify-item.double {
@@ -43,6 +60,9 @@
 
 .classify-item.single .span-block-center {
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .frame-icon-check {
@@ -55,6 +75,11 @@
     border-radius: 9999px;
     background-color: rgb(234, 237, 240);
     color: rgb(207, 212, 216);
+}
+
+.frame-icon-check.checked{
+    background-color: #55B9A9;
+    color: white;
 }
 
 .class-classify .rows {
@@ -74,6 +99,7 @@
 
 .item-frame-main {
     width: 50%;
+    padding: 0 0.3rem;
 }
 
 .item-frame {

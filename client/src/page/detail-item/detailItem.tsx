@@ -27,6 +27,7 @@ export default function DetailItem() {
     const [nft, setNft] = useState<productType>()
     const [contract, setContract] = useState<any>(null);
     const [contractNetwork, setContractNetwork] = useState<any>(null);
+    const [quantity, setQuantity] = useState(1);
     const { _id } = useParams();
 
     useEffect(() => {
@@ -51,24 +52,17 @@ export default function DetailItem() {
             setLoadingDetail(true);
             if (contract != null) {
                 try {
-                    const productCount = await contract.methods.lastProductId().call();
-                    const products = [];
-                    for (let i = 1; i <= productCount; i++) {
-                        const product = await contract.methods.products(i).call();
-                        if (product.available && product.quantity > 0) {
-                            products.push({
-                                name: product.name,
-                                id: product.id,
-                                description: product.description,
-                                price: product.price,
-                                imageURL: product.imageURL,
-                                quantity: product.quantity,
-                            });
-                        }
+                    const product = await contract.methods.products(_id).call();
+                    if (product.available && product.quantity > 0) {
+                        setNft({
+                            name: product.name,
+                            id: product.id,
+                            description: product.description,
+                            price: product.price,
+                            imageURL: product.imageURL,
+                            quantity: product.quantity,
+                        });
                     }
-                    await Promise.all(products.filter((ele: any) => ele.id === _id).map(async (i: any) => {
-                        setNft(i)
-                    }))
                 } catch (error: any) {
                     console.log(error);
                 } finally {
@@ -81,7 +75,12 @@ export default function DetailItem() {
         }
     }, [_id, contract])
 
-    async function buyProduct(productId: any) {
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const qty = event.currentTarget.value;
+        setQuantity(Number(qty));
+    }
+
+    async function buyProduct(productId: number, getprice:any) {
         if (contract != null && contractNetwork != null) {
             const web3Modal = new Web3Modal();
             const provider = await web3Modal.connect();
@@ -94,21 +93,24 @@ export default function DetailItem() {
                 deployedNetworkToken.address
             );
             try {
-                const product = await contract.methods.products(productId).call();
-                const price = product.price;
+
+                const totalPrice = getprice * quantity;
+
+                const price = web3.utils.toWei(String(totalPrice), 'ether');
 
                 await healthcareMarketInstanceToken.methods.approve(
                     contractNetwork.address,
                     price
                 ).send({ from: accounts[0] });
-
-                await contract.methods.buy(productId).send({ from: accounts[0] });
+                    console.log(accounts[0])
+                await contract.methods.buy([productId],[quantity], accounts[0]).send({ from: accounts[0] });
             } catch (error) {
                 console.error(error);
             }
         }
     }
 
+    
 
     return <div className='class-collection-detail' id='collection-detail'>
         <div className='content-page'>
@@ -212,11 +214,12 @@ export default function DetailItem() {
                                                 <span>Price</span>
                                                 <FaEthereum />
                                                 <p>{nft?.price} HCMA</p>
+                                                <input defaultValue={quantity} type="number" onChange={handleInputChange} placeholder="Quantity"/>
                                             </div>
                                         </div>
                                         <div className='class-offer-content'>
                                             <div className='offer-info'>
-                                                <button onClick={() => buyProduct(nft?.id)}>Buy now</button>
+                                                <button onClick={() => buyProduct(Number(nft?.id), nft?.price)}>Buy now</button>
                                             </div>
                                         </div>
                                     </div>
